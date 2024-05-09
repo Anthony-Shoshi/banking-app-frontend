@@ -4,12 +4,17 @@
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
         <li class="nav-item">
           <router-link to="/" class="nav-link" active-class="active"
-            >Home</router-link
+            >Dashboard</router-link
           >
         </li>      
         <li class="nav-item">
           <router-link to="/products" class="nav-link" active-class="active"
             >Products</router-link
+          >
+        </li>
+        <li class="nav-item">
+          <router-link to="/adminlogin" class="nav-link" active-class="active"
+            >Admin Login</router-link
           >
         </li>
         <li class="nav-item">
