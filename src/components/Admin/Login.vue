@@ -2,19 +2,24 @@
   <section>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-6 d-flex align-items-center justify-content-center">
-          <div class="text-center">
-            <h1 class="welcome-text">Welcome to FAFA Bank</h1>
-            <img src="../assets/images/banking.png" alt="Bank Image" class="rounded img-fluid" />
+        <div class="col-md-12">
+          <h1 class="text-center welcome-text">Welcome to FAFA Bank - Admin Portal</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="register-form d-flex flex-column align-items-center justify-content-center">
+            <h2 class="register-text text-center"><strong>Register New Employee!</strong></h2>
+            <a href="/adminregister" class="btn btn-primary btn-lg register">Register</a>
           </div>
         </div>
-        <div class="col-md-6 d-flex align-items-center justify-content-center">
-          <div class="login-form d-flex flex-column justify-content-center">
+        <div class="col-md-6">
+          <div class="login-form d-flex flex-column justify-content-center align-items-center">
             <h2 class="text-center"><strong>Login</strong></h2>
-            <form @submit.prevent="validateLogin">
+            <form @submit.prevent="validateLogin" class="mt-4">
               <div class="mb-3">
                 <label for="inputUsername" class="form-label">Username</label>
-                <input v-model="username" id="inputUsername" type="text" class="form-control" required/>
+                <input v-model="username" id="inputUsername" type="text" class="form-control" style="width: 300px;" required/>
                 <div v-if="showUsernameError" class="text-danger">Username is required</div>
               </div>
               <div class="mb-3">
@@ -22,11 +27,10 @@
                 <input v-model="password" type="password" class="form-control" id="inputPassword" required/>
                 <div v-if="showPasswordError" class="text-danger">Password is required</div>
               </div>
-              <button type='submit' class="btn btn-primary btn-lg btn-block">Login</button>
-              <a href="/register" class="btn btn-link btn-lg btn-block">Don't have an account? Register!</a>
+              <button type='submit' class="btn btn-primary btn-lg login">Login</button>
             </form>
           </div>
-        </div>
+      </div>
       </div>
     </div>
   </section>
@@ -34,7 +38,7 @@
 
 <script>
 export default {
-  name: "Login",
+  name: "AdminLogin",
   data() {
     return {
       username: "",
@@ -56,10 +60,16 @@ export default {
 </script>
 
 <style scoped>
-
 .welcome-text {
   color: #F7E3DB;
-  font-size: 100px;
+  font-size: 60px;
+  margin-top: 50px;
+}
+
+.register-text {
+  color: #000;
+  font-size: 70px;
+  margin-top: 50px;
 }
 
 .login-form {
@@ -69,13 +79,15 @@ export default {
   width: 80%;
   max-width: 400px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
 }
 
 .rounded {
   width: 80%;
 }
 
-.btn-primary{
+.login {
+  margin-top: 20px;
   background-color: #60BFC1;
   color: #fff;
   font-weight: bold;
@@ -83,9 +95,27 @@ export default {
   width: 100%;
 }
 
-.btn-primary:hover{
+.login:hover {
   background-color: #3a7e80;
   color: #fff;
   border: none;
 }
+
+.register {
+  margin-top: 30px;
+  font-size: 30px;
+  background-color: #000000;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  width: 40%;
+  justify-content: center;
+}
+
+.register:hover {
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+}
 </style>
+
