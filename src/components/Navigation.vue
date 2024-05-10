@@ -27,6 +27,16 @@
             >Login</router-link
           >
         </li>
+        <li class="nav-item">
+          <router-link to="/transactions" class="nav-link" active-class="active"
+            >Transactions</router-link
+          >
+        </li>
+        <li class="nav-item">
+          <router-link to="/card" class="nav-link" active-class="active"
+            >Card</router-link
+          >
+        </li>
       </ul>
     </div>
   </nav>
