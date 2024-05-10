@@ -61,8 +61,9 @@ export default {
 
 <style scoped>
 .welcome-text {
-  color: #F7E3DB;
+  color: #60BFC1;
   font-size: 60px;
+  font-weight: bold;
   margin-top: 50px;
 }
 
