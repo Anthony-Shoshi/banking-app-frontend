@@ -9,6 +9,8 @@ import AdminLogin from '../components/Admin/Login.vue';
 import Register from '../components/Register.vue';
 import EmployeeRegister from '../components/Admin/Register.vue';
 
+import EmployeeView from '../components/EmployeeView.vue';
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -19,7 +21,8 @@ const router = createRouter({
     { path: '/adminregister', component: EmployeeRegister},
     { path: '/register', component: Register },
     { path: '/createproduct', component: CreateProduct },
-    { path: '/editproduct/:id', component: EditProduct, props: true  }
+    { path: '/editproduct/:id', component: EditProduct, props: true  },
+    { path: '/employeeView', component: EmployeeView}
   ]
 })
 

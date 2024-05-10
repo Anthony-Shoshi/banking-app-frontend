@@ -6,7 +6,12 @@
           <router-link to="/" class="nav-link" active-class="active"
             >Dashboard</router-link
           >
-        </li>      
+        </li>  
+        <li class="nav-item">
+          <router-link to="/employeeView" class="nav-link" active-class="active"
+            >Employee Dashboard</router-link
+          >
+        </li>    
         <li class="nav-item">
           <router-link to="/products" class="nav-link" active-class="active"
             >Products</router-link
