@@ -1,13 +1,11 @@
 <template>
   <section>
     <div class="container">
-      <div v-if="showSuccessMessage" class="alert alert-success success-message" role="alert">
-        Customer has been registered successfully!
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="text-center welcome-text">Register New Customer</h1>
+      <WaitingApproval v-if="showSuccessMessage" :userInfo="userInfo"/>
+      <div v-else>
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="text-center welcome-text">Register New Customer</h1>
         </div>
       </div>
       <div class="row justify-content-center">
@@ -77,18 +75,20 @@
           <button class="btn btn-secondary btn-lg btn-block" @click="returnToLogin">Return to Login</button>
         </div>
       </div>
+      </div>
     </div>
   </section>
 </template>
 
 <script>
-import { ref } from 'vue';
 import DOBPicker from '@/components/DatePicker.vue';
+import WaitingApproval from '@/components/WaitingApproval.vue';
 
 export default {
   name: 'RegisterCustomer',
   components: {
     DOBPicker,
+    WaitingApproval,
   },
   data() {
     return {
@@ -100,30 +100,44 @@ export default {
       bsn: '',
       phoneNumber: '',
       gender: '',
-      accountType: '', // Default account type selected
+      accountType: '',
       showSuccessMessage: false,
+
+      userInfo: {} // Initialize userInfo here
+
     };
   },
   methods: {
     registerCustomer() {
-      // Perform customer registration logic here
-      // After successful registration, set showSuccessMessage to true
+
+      // Set showSuccessMessage to true to display success message
       this.showSuccessMessage = true;
 
-      // Clear form fields
+      // Push the route with userInfo as a parameter
+      this.$router.push({
+        name: 'WaitingApproval',
+        params: {
+          userInfo: {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            password: this.password,
+            bsn: this.bsn,
+            phoneNumber: this.phoneNumber,
+            gender: this.gender,
+            accountType: this.accountType
+          }
+        }
+      });
+
+
+      // Clear form fields after pushing the route
       this.clearFields();
-    },
-    showPasswordFormat() {
-      // Function to handle password format message display
-    },
-    checkPasswordMatch() {
-      // Function to check if passwords match
     },
     returnToLogin() {
       this.$router.push('/login');
     },
     clearFields() {
-      // Clear all form fields
       this.firstName = '';
       this.lastName = '';
       this.email = '';
