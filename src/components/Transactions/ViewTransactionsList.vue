@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>All Transactions</h1>
+    <h1 class="transactionHead">All Transactions</h1>
     <div v-if="transactions.length > 0">
       <table>
         <thead>
@@ -14,11 +14,11 @@
         </thead>
         <tbody>
           <tr v-for="(transaction, index) in transactions" :key="index">
-            <td>{{ transaction.fromAccount }}</td>
-            <td>{{ transaction.toAccount }}</td>
-            <td>{{ transaction.amount }}</td>
-            <td>{{ transaction.timestamp }}</td>
-            <td>{{ transaction.initiatingUser }}</td>
+            <td>{{ transaction.fromAccountIban }}</td>
+            <td>{{ transaction.toAccountIban }}</td>
+            <td>{{ transaction.transferAmount }}</td>
+            <td>{{ transaction.currentTime }}</td>
+            <td>{{ `${transaction.firstName} ${transaction.lastName} / ${transaction.initiatedBy}` }}</td>
           </tr>
         </tbody>
       </table>
@@ -28,12 +28,12 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
-      transactions: []
+      transactions: [],
     };
   },
   mounted() {
@@ -41,14 +41,40 @@ export default {
   },
   methods: {
     fetchTransactions() {
-      axios.get('http://localhost:8080/transactions')
-        .then(response => {
-          this.transactions = response.data; // Update the transactions data with the response from the backend
+      axios
+        .get("http://localhost:8080/transactions")
+        .then((response) => {
+          this.transactions = response.data;
         })
-        .catch(error => {
-          console.error('There was a problem with the Axios request:', error);
+        .catch((error) => {
+          console.error("There was a problem with the Axios request:", error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
+
+
+<style scoped>
+.transactionHead{
+  margin: auto 20px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 90%;
+  margin: auto 20px;
+}
+
+th,
+td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
+
+thead {
+  background-color: #f2f2f2;
+}
+</style>
+
