@@ -38,12 +38,26 @@ import axios from '@/axios'; // Assuming you have a custom axios instance
 import { onMounted, ref } from 'vue';
 
 export default {
-  methods: {
-    goToCustomers() {
-      this.$router.push({ path: '/employees/customer-accounts' });
-    },
-    goToTransactions() {
-      this.$router.push({ path: '/transactions' });
+  setup() {
+    const customers = ref([]);
+    const showingCustomers = ref(false);
+    const selectedCustomerIndex = ref(null);
+
+    onMounted(async () => {
+      try {
+        const response = await axios.get('/employees/customer-accounts');
+        if (response.data && response.data.length) {
+          customers.value = response.data;
+        } else {
+          console.error("No customers found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch customer accounts:", error);
+      }
+    });
+
+    function showCustomers() {
+      showingCustomers.value = true;
     }
 
     function viewCustomerDetails(index) {
