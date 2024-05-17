@@ -17,7 +17,7 @@
 export default {
   methods: {
     goToCustomers() {
-      this.$router.push({ path: '/customers' });
+      this.$router.push({ path: '/employees/customer-accounts' });
     },
     goToTransactions() {
       this.$router.push({ path: '/transactions' });

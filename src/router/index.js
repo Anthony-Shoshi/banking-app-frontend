@@ -19,7 +19,7 @@ const router = createRouter({
     { path: '/register', component: Register },  
     { path: '/employeeView', component: EmployeeView},
     { path: '/waitingapproval', name: 'WaitingApproval', component: WaitingApproval, props: true,},
-    { path: '/customers', component: Customers }, // Add the Customers route
+    { path: '/employees/customer-accounts', component: Customers }, // Add the Customers route
     { path: '/transactions', component: ViewTransactionsList }, // Add the Transactions route
   ]
 });
