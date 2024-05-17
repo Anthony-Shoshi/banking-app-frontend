@@ -17,8 +17,8 @@ const router = createRouter({
     { path: '/adminlogin', component: AdminLogin},
     { path: '/adminregister', component: EmployeeRegister},
     { path: '/register', component: Register },
-    { path: '/createproduct', component: CreateProduct },
-    { path: '/editproduct/:id', component: EditProduct, props: true  },
+   // { path: '/createproduct', component: CreateProduct },
+//    { path: '/editproduct/:id', component: EditProduct, props: true  },
     { path: '/employeeView', component: EmployeeView},
     { path: '/waitingapproval', name: 'WaitingApproval', component: WaitingApproval, props: true,},
   ]
