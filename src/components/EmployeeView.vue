@@ -3,28 +3,74 @@
     <div class="sidebar">
       <h3>Employee Dashboard</h3>
       <ul>
-        <li @click="goToCustomers">Customers</li>
-        <li @click="goToTransactions">All Transactions</li>
+        <li @click="showCustomers">Customers</li>
       </ul>
     </div>
     <div class="main">
-      <router-view></router-view>
+      <h1 v-if="showingCustomers">Customers</h1>
+      <div v-if="showingCustomers">
+        <table v-if="customers.length > 0">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Account Number</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(customer, index) in customers" :key="index">
+            <td>{{ customer.customerName }}</td>
+            <td>{{ customer.IBAN }}</td>
+            <td>
+              <button @click="viewCustomerDetails(index)">View Details</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <p v-else>No customers available</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from '@/axios'; // Assuming you have a custom axios instance
+import { onMounted, ref } from 'vue';
+
 export default {
-  methods: {
-    goToCustomers() {
-      this.$router.push({ path: '/customers' });
-    },
-    goToTransactions() {
-      this.$router.push({ path: '/transactions' });
+  setup() {
+    const customers = ref([]);
+    const showingCustomers = ref(false);
+    const selectedCustomerIndex = ref(null);
+
+    onMounted(async () => {
+      try {
+        const response = await axios.get('/employees/customer-accounts');
+        if (response.data && response.data.length) {
+          customers.value = response.data;
+        } else {
+          console.error("No customers found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch customer accounts:", error);
+      }
+    });
+
+    function showCustomers() {
+      showingCustomers.value = true;
     }
+
+    function viewCustomerDetails(index) {
+      selectedCustomerIndex.value = index;
+      // Implement logic to view details
+    }
+
+    return { customers, showCustomers, showingCustomers, viewCustomerDetails };
   }
 };
 </script>
+
+
 <style scoped>
 body {
   font-family: Arial, sans-serif;
