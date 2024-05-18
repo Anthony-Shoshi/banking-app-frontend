@@ -1,7 +1,6 @@
 <template>
   <div>
-
-    <h1 class="transactionHead">All Transactions</h1>
+    <h2 class="transactionHead">Transactions for {{ customerName }}</h2>
     <div v-if="transactions.length > 0">
       <table>
         <thead>
@@ -29,46 +28,59 @@
       </table>
     </div>
     <p v-else>No transactions available</p>
+    <button class="backBtn" @click="goBack">Back to Customers</button>
   </div>
 </template>
-
-<script>
+  
+  <script>
 import axios from "axios";
+import { ref, onMounted } from "vue";
 
 export default {
-  data() {
-    return {
-      transactions: [],
-    };
-  },
-  mounted() {
-    this.fetchTransactions();
-  },
-  methods: {
-    fetchTransactions() {
-      axios
-        .get("http://localhost:8080/transactions")
-        .then((response) => {
-          this.transactions = response.data;
-        })
-        .catch((error) => {
-          console.error("There was a problem with the Axios request:", error);
-        });
+  props: {
+    customerId: {
+      type: String,
+      required: true,
     },
+    customerName: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const transactions = ref([]);
+
+    onMounted(async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/customers/${props.customerId}/transactions`
+        );
+        transactions.value = response.data;
+      } catch (error) {
+        console.error("Failed to fetch transactions:", error);
+      }
+    });
+
+    function goBack() {
+      emit("back");
+    }
+
+    return { transactions, goBack };
   },
 };
 </script>
-
-
+  
 <style scoped>
+.backBtn{
+    margin: auto 20px;
+}
 .transactionHead {
   margin: auto 20px;
 }
-
 table {
   border-collapse: collapse;
   width: 90%;
-  margin: auto 20px;
+  margin: 40px 20px;
 }
 
 th,
@@ -82,4 +94,4 @@ thead {
   background-color: #f2f2f2;
 }
 </style>
-
+  

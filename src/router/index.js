@@ -6,8 +6,9 @@ import Register from '../components/Register.vue';
 import EmployeeRegister from '../components/Admin/Register.vue';
 import WaitingApproval from '../components/WaitingApproval.vue';
 import EmployeeView from '../components/EmployeeView.vue';
-import Customers from '../components/Customers.vue'; // Import the Customers component
-import ViewTransactionsList from '../components/Transactions/ViewTransactionsList.vue'; // Import the Transactions component
+import Customers from '../components/Customers/Customers.vue'; 
+import CustomerTransaction from '../components/Customers/CustomerTransaction.vue'; 
+import ViewTransactionsList from '../components/Transactions/ViewTransactionsList.vue'; 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,8 +20,9 @@ const router = createRouter({
     { path: '/register', component: Register },  
     { path: '/employeeView', component: EmployeeView},
     { path: '/waitingapproval', name: 'WaitingApproval', component: WaitingApproval, props: true,},
-    { path: '/employees/customer-accounts', component: Customers }, // Add the Customers route
-    { path: '/transactions', component: ViewTransactionsList }, // Add the Transactions route
+    { path: '/employees/customer-accounts', component: Customers }, 
+    { path: '/customers/:customerId/transactions', component: CustomerTransaction }, 
+    { path: '/transactions', component: ViewTransactionsList }, 
   ]
 });
 
