@@ -27,22 +27,22 @@
       <p v-else>No customers available</p>
     </div>
   </template>
-  
+
 
   <script>
   import axios from "axios"; // Use this if using default axios
-  
+
   // If you have a custom axios instance, import it like this:
-  // import axios from "@/plugins/axios"; 
-  
+  // import axios from "@/plugins/axios";
+
   import { onMounted, ref } from "vue";
-  
+
   export default {
     setup() {
       const customers = ref([]);
       const showingCustomers = ref(false);
       const selectedCustomerIndex = ref(null);
-  
+
       onMounted(async () => {
         try {
           const response = await axios.get("http://localhost:8080/employees/customer-accounts");
@@ -55,18 +55,44 @@
           console.error("Failed to fetch customer accounts:", error);
         }
       });
-  
+
       function showCustomers() {
         showingCustomers.value = true;
       }
-  
+
       function viewCustomerDetails(index) {
         selectedCustomerIndex.value = index;
         // Implement logic to view details
       }
-  
+
       return { customers, showCustomers, showingCustomers, viewCustomerDetails };
     },
   };
   </script>
+
+
+<style scoped>
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+</style>
   
