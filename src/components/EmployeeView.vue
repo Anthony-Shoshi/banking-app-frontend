@@ -5,6 +5,8 @@
       <ul>
         <li @click="goToCustomers">Customers</li>
         <li @click="goToTransactions">All Transactions</li>
+        <li @click="goCustomersWithoutAccounts">Customers-without-accounts</li>
+
       </ul>
     </div>
     <div class="main">
@@ -21,10 +23,15 @@ export default {
     },
     goToTransactions() {
       this.$router.push({ path: '/transactions' });
+    },
+    goCustomersWithoutAccounts() {
+      this.$router.push({ path: '/employees/customers-without-accounts' });
     }
   }
 };
 </script>
+
+
 <style scoped>
 body {
   font-family: Arial, sans-serif;
