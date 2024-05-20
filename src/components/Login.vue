@@ -24,6 +24,7 @@
               </div>
               <button type='submit' class="btn btn-primary btn-lg btn-block">Login</button>
               <a href="/register" class="btn btn-link btn-lg btn-block">Don't have an account? Register!</a>
+              <div v-if="loginError" class="text-danger mt-3">{{ loginError }}</div>
             </form>
           </div>
         </div>
@@ -33,6 +34,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Login",
   data() {
@@ -40,7 +43,8 @@ export default {
       username: "",
       password: "",
       showUsernameError: false,
-      showPasswordError: false
+      showPasswordError: false,
+      loginError: null // Add a field to hold login errors
     };
   },
   methods: {
@@ -48,15 +52,31 @@ export default {
       this.showUsernameError = this.username === "";
       this.showPasswordError = this.password === "";
       if (!this.showUsernameError && !this.showPasswordError) {
-        // Perform login action
+        this.fetchLogin();
       }
+    },
+    fetchLogin() {
+      axios
+          .post("http://localhost:8080/login", {
+            email: this.username,
+            password: this.password
+          })
+          .then((response) => {
+            // Handle successful login
+            // Example: store the token in local storage and redirect
+            localStorage.setItem("token", response.data.token);
+            this.$router.push("/dashboard"); // Adjust the route as needed
+          })
+          .catch((error) => {
+            console.error("There was a problem with the Axios request:", error);
+            this.loginError = "Login failed. Please check your credentials and try again.";
+          });
     }
   }
 };
 </script>
 
 <style scoped>
-
 .welcome-text {
   color: #60BFC1;
   font-size: 100px;
@@ -76,7 +96,7 @@ export default {
   width: 80%;
 }
 
-.btn-primary{
+.btn-primary {
   background-color: #60BFC1;
   color: #fff;
   font-weight: bold;
@@ -84,7 +104,7 @@ export default {
   width: 100%;
 }
 
-.btn-primary:hover{
+.btn-primary:hover {
   background-color: #3a7e80;
   color: #fff;
   border: none;

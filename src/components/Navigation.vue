@@ -18,16 +18,6 @@
           >
         </li>
         <li class="nav-item">
-          <router-link to="/adminlogin" class="nav-link" active-class="active"
-            >Admin Login</router-link
-          >
-        </li>
-        <li class="nav-item">
-          <router-link to="/login" class="nav-link" active-class="active"
-            >Login</router-link
-          >
-        </li>
-        <li class="nav-item">
           <router-link to="/transactions" class="nav-link" active-class="active"
             >Transactions</router-link
           >
@@ -35,6 +25,11 @@
         <li class="nav-item">
           <router-link to="/card" class="nav-link" active-class="active"
             >Card</router-link
+          >
+        </li>
+        <li class="nav-item">
+          <router-link to="/login" class="nav-link" active-class="active"
+          >Login</router-link
           >
         </li>
       </ul>
