@@ -7,8 +7,6 @@
         <tr>
           <th>Full-name</th>
           <th>Customer status</th>
-          <th>Age</th>
-          <th>Gender</th>
           <th>Action</th>
         </tr>
         </thead>
@@ -16,8 +14,6 @@
         <tr v-for="(customer, index) in customers" :key="index">
           <td>{{ customer.name }}</td>
           <td>{{ customer.status }}</td>
-          <td>{{ customer.age }}</td>
-          <td>{{ customer.sex }}</td>
           <td>
             <button  @click="openModal(customer.userId)">
               Approve Customer
@@ -83,7 +79,7 @@ export default {
         if (response.data && response.data.length) {
           customers.value = response.data.map(customer => ({
             ...customer,
-            age: calculateAge(customer.dob)
+            age: calculateAge(customer.dob) // user DateOFbirth
           }));
         } else {
           console.error("No customers found");
