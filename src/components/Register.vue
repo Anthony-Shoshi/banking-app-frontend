@@ -6,13 +6,12 @@
         <div class="row">
           <div class="col-md-12">
             <h1 class="text-center welcome-text">Register New Customer</h1>
+          </div>
         </div>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col-md-6">
-          <form @submit.prevent="registerCustomer" class="mt-4">
-            <div class="row mb-3">
-              <div class="col-md-6">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <form @submit.prevent="registerCustomer" class="mt-4">
+              <div class="mb-3">
                 <label for="inputGender" class="form-label form-text-lg">Gender</label>
                 <select v-model="gender" id="inputGender" class="form-select" required>
                   <option value="male">Male</option>
@@ -20,61 +19,53 @@
                   <option value="others">Others</option>
                 </select>
               </div>
-              <div class="col-md-6">
-                <label for="inputAccountType" class="form-label form-text-lg">Account Type</label>
-                <select v-model="accountType" id="inputAccountType" class="form-select" required>
-                  <option value="saving">Saving</option>
-                  <option value="current">Current</option>
-                </select>
+              <div class="mb-3 row">
+                <div class="col-md-6">
+                  <label for="inputFirstName" class="form-label form-text-lg">First Name</label>
+                  <input v-model="firstName" id="inputFirstName" type="text" class="form-control" required/>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputLastName" class="form-label form-text-lg">Last Name</label>
+                  <input v-model="lastName" id="inputLastName" type="text" class="form-control" required/>
+                </div>
               </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="inputFirstName" class="form-label form-text-lg">First Name</label>
-                <input v-model="firstName" id="inputFirstName" type="text" class="form-control" required/>
+              <div class="mb-3 row">
+                <div class="col-md-6">
+                  <label for="inputEmail" class="form-label form-text-lg">Email</label>
+                  <input v-model="email" id="inputEmail" type="email" class="form-control" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
+                </div>
+                <div class="col-md-6">
+                  <DOBPicker />
+                </div>
               </div>
-              <div class="col-md-6">
-                <label for="inputLastName" class="form-label form-text-lg">Last Name</label>
-                <input v-model="lastName" id="inputLastName" type="text" class="form-control" required/>
+              <div class="mb-3 row">
+                <div class="col-md-6">
+                  <label for="inputPassword" class="form-label form-text-lg">Password</label>
+                  <input v-model="password" @input="showPasswordFormat" type="password" class="form-control" id="inputPassword" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"/>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputConfirmPassword" class="form-label form-text-lg">Confirm Password</label>
+                  <input v-model="confirmPassword" type="password" class="form-control" id="inputConfirmPassword" required @input="checkPasswordMatch"/>
+                  <div v-if="confirmPassword && password !== confirmPassword" class="text-danger">Passwords do not match</div>
+                </div>
               </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="inputEmail" class="form-label form-text-lg">Email</label>
-                <input v-model="email" id="inputEmail" type="email" class="form-control" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
+              <div class="mb-3 row">
+                <div class="col-md-6">
+                  <label for="inputBsn" class="form-label form-text-lg">BSN Number</label>
+                  <input v-model="bsn" id="inputBsn" type="text" class="form-control" required pattern="\d{9}" maxlength="9"/>
+                  <div class="form-text text-dark">BSN number must be exactly 9 digits long.</div>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputPhoneNumber" class="form-label form-text-lg">Phone Number</label>
+                  <input v-model="phoneNumber" id="inputPhoneNumber" type="text" class="form-control" required pattern="\d{9}" maxlength="9"/>
+                  <div class="form-text text-dark">Phone number must be exactly 9 digits long.</div>
+                </div>
               </div>
-              <div class="col-md-6">
-                <DOBPicker />
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="inputPassword" class="form-label form-text-lg">Password</label>
-                <input v-model="password" @input="showPasswordFormat" type="password" class="form-control" id="inputPassword" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"/>
-              </div>
-              <div class="col-md-6">
-                <label for="inputConfirmPassword" class="form-label form-text-lg">Confirm Password</label>
-                <input v-model="confirmPassword" type="password" class="form-control" id="inputConfirmPassword" required @input="checkPasswordMatch"/>
-                <div v-if="confirmPassword && password !== confirmPassword" class="text-danger">Passwords do not match</div>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="inputBsn" class="form-label form-text-lg">BSN Number</label>
-                <input v-model="bsn" id="inputBsn" type="text" class="form-control" required pattern="\d{9}" maxlength="9"/>
-                <div class="form-text text-dark">BSN number must be exactly 9 digits long.</div>
-              </div>
-              <div class="col-md-6">
-                <label for="inputPhoneNumber" class="form-label form-text-lg">Phone Number</label>
-                <input v-model="phoneNumber" id="inputPhoneNumber" type="text" class="form-control" required pattern="\d{9}" maxlength="9"/>
-                <div class="form-text text-dark">Phone number must be exactly 9 digits long.</div>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Register</button>
-          </form>
-          <button class="btn btn-secondary btn-lg btn-block" @click="returnToLogin">Return to Login</button>
+              <button type="submit" class="btn btn-primary btn-lg btn-block">Register</button>
+            </form>
+            <button class="btn btn-secondary btn-lg btn-block mt-3" @click="returnToLogin">Return to Login</button>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   </section>
@@ -102,14 +93,11 @@ export default {
       gender: '',
       accountType: '',
       showSuccessMessage: false,
-
-      userInfo: {} // Initialize userInfo here
-
+      userInfo: {}, // Initialize userInfo here
     };
   },
   methods: {
     registerCustomer() {
-
       // Set showSuccessMessage to true to display success message
       this.showSuccessMessage = true;
 
@@ -125,11 +113,10 @@ export default {
             bsn: this.bsn,
             phoneNumber: this.phoneNumber,
             gender: this.gender,
-            accountType: this.accountType
-          }
-        }
+            accountType: this.accountType,
+          },
+        },
       });
-
 
       // Clear form fields after pushing the route
       this.clearFields();
@@ -164,7 +151,7 @@ export default {
 }
 
 .btn-primary {
-  margin-top:  10px;
+  margin-top: 10px;
   margin-bottom: 10px;
   background-color: #000000;
   color: #fff;
@@ -179,7 +166,7 @@ export default {
 }
 
 .btn-secondary {
-  margin-top:  10px;
+  margin-top: 10px;
   margin-bottom: 10px;
   background-color: #000000;
   color: #fff;
@@ -193,7 +180,7 @@ export default {
   border: none;
 }
 
-.success-message{
+.success-message {
   font-size: 18px;
 }
 </style>

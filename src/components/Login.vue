@@ -62,10 +62,8 @@ export default {
             password: this.password
           })
           .then((response) => {
-            // Handle successful login
-            // Example: store the token in local storage and redirect
             localStorage.setItem("token", response.data.token);
-            this.$router.push("/dashboard"); // Adjust the route as needed
+            this.$router.push("/customerDashboard");
           })
           .catch((error) => {
             console.error("There was a problem with the Axios request:", error);
