@@ -36,6 +36,7 @@
             </tr>
           </tbody>
         </table>
+        
       </div>
       <p v-else>No transactions available</p>
     </div>

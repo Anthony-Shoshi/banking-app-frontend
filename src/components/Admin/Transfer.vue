@@ -5,35 +5,40 @@
       <ul>
         <li @click="goToCustomers">Customers</li>
         <li @click="goToTransactions">All Transactions</li>
-        <li @click="goCustomersWithoutAccounts">Customers-without-accounts</li>
+        <li @click="goCustomersWithoutAccounts">Customers without accounts</li>
         <li @click="goTransfer">Transfer</li>
       </ul>
     </div>
     <div class="main">
+      <h1>Transfer</h1>
       <div class="transfer-form">
-        <h1>Transfer</h1>
         <form @submit.prevent="transferMoney">
           <div class="form-group">
-            <label for="sourceAccount">Source Account:</label>
+            <label for="fromAccountIban">Source Account:</label>
             <input
               type="text"
               id="sourceAccount"
-              v-model="sourceAccount"
+              v-model="fromAccountIban"
               required
             />
           </div>
           <div class="form-group">
-            <label for="destinationAccount">Destination Account:</label>
+            <label for="toAccountIban">Destination Account:</label>
             <input
               type="text"
               id="destinationAccount"
-              v-model="destinationAccount"
+              v-model="toAccountIban"
               required
             />
           </div>
           <div class="form-group">
             <label for="amount">Amount:</label>
-            <input type="number" id="amount" v-model="amount" required />
+            <input
+              type="number"
+              id="transferAmount"
+              v-model="transferAmount"
+              required
+            />
           </div>
           <button type="submit">Transfer</button>
         </form>
@@ -42,14 +47,16 @@
     </div>
   </div>
 </template>
-  
-  <script>
+
+<script>
+import axios from "axios";
+
 export default {
   data() {
     return {
-      sourceAccount: "",
-      destinationAccount: "",
-      amount: 0,
+      fromAccountIban: "",
+      toAccountIban: "",
+      transferAmount: 0,
     };
   },
   methods: {
@@ -65,17 +72,43 @@ export default {
     goTransfer() {
       this.$router.push({ path: "/transfer" });
     },
-    transferMoney() {
-      // Implement the transfer logic here
-      alert(
-        `Transferring ${this.amount} from ${this.sourceAccount} to ${this.destinationAccount}`
-      );
+    async transferMoney() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("No token found. Please log in.");
+        }
+
+        console.log(`Token: ${token}`); // Log the token
+
+        const response = await axios.post(
+          "http://localhost:8080/transactions",
+          {
+            fromAccountIban: this.fromAccountIban,
+            toAccountIban: this.toAccountIban,
+            transferAmount: this.transferAmount,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        alert(`Transfer successful: ${response.data}`);
+      } catch (error) {
+        console.error("There was an error with the transfer:", error);
+        alert(
+          `Error: ${
+            error.response ? error.response.data.message : error.message
+          }`
+        );
+      }
     },
   },
 };
 </script>
-  
-  <style scoped>
+
+<style scoped>
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -153,4 +186,3 @@ button:hover {
   background-color: #555;
 }
 </style>
-  
