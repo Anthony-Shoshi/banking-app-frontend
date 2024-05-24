@@ -84,6 +84,7 @@ export default {
         const response = await axios.post(
           "http://localhost:8080/transactions",
           {
+            
             fromAccountIban: this.fromAccountIban,
             toAccountIban: this.toAccountIban,
             transferAmount: this.transferAmount,
@@ -106,6 +107,8 @@ export default {
     },
   },
 };
+
+
 </script>
 
 <style scoped>
