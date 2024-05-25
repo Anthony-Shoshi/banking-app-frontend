@@ -1,27 +1,46 @@
 import { createStore } from 'vuex';
 
-export default createStore({
-    state: {
-        firstName: '',
-        lastName: '',
-        role: '',
-        isLoggedIn: false,
+const store = createStore({
+    state() {
+        return {
+            user: null,
+        };
+    },
+    getters: {
+        isAuthenticated: (state) => !!state.user,
+        isEmployee: (state) => state.user?.role === 'EMPLOYEE',
+        isCustomer: (state) => state.user?.role === 'CUSTOMER',
+        userName: (state) => `${state.user?.firstName} ${state.user?.lastName}`,
     },
     mutations: {
         setUser(state, user) {
-            state.firstName = user.firstName;
-            state.lastName = user.lastName;
-            state.role = user.role;
-            state.isLoggedIn = true;
+            state.user = user;
+            localStorage.setItem('user', JSON.stringify(user));
         },
         logout(state) {
-            state.firstName = '';
-            state.lastName = '';
-            state.role = '';
-            state.isLoggedIn = false;
-            localStorage.removeItem('token');
-        }
+            state.user = null;
+            localStorage.removeItem('user');
+        },
+        initializeStore(state) {
+            const user = localStorage.getItem('user');
+            if (user) {
+                state.user = JSON.parse(user);
+            }
+        },
     },
-    actions: {},
-    modules: {}
+    actions: {
+        login({ commit }, user) {
+            commit('setUser', user);
+        },
+        logout({ commit }) {
+            commit('logout');
+            // Redirect to home ("/") after logout
+            window.location.href = "/";
+        },
+    },
 });
+
+// Initialize store with user data from local storage
+store.commit('initializeStore');
+
+export default store;

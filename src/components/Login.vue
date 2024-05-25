@@ -59,12 +59,18 @@ export default {
       axios
           .post("http://localhost:8080/login", {
             email: this.username,
-            password: this.password
+            password: this.password,
+            firstName: this.firstName,
+            lastName: this.lastName,
           })
           .then((response) => {
-            const { token, role } = response.data;
+            const { token, role, firstName, lastName } = response.data;
             localStorage.setItem("token", token);
             localStorage.setItem("role", role);
+
+            // Set user information in Vuex store
+            this.$store.dispatch('login', { email: this.username, role: role, firstName: firstName, lastName: lastName });
+
             this.redirectUser(role);
           })
           .catch((error) => {
@@ -72,7 +78,7 @@ export default {
             this.loginError = "Login failed. Please check your credentials and try again.";
           });
     },
-    redirectUser(role) {
+      redirectUser(role) {
       if (role === "EMPLOYEE") {
         this.$router.push("/employeeView");
       } else if (role === "CUSTOMER") {
