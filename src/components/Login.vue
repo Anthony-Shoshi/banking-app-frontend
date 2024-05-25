@@ -44,7 +44,7 @@ export default {
       password: "",
       showUsernameError: false,
       showPasswordError: false,
-      loginError: null // Add a field to hold login errors
+      loginError: null
     };
   },
   methods: {
@@ -62,13 +62,22 @@ export default {
             password: this.password
           })
           .then((response) => {
-            localStorage.setItem("token", response.data.token);
-            this.$router.push("/customerDashboard");
+            const { token, role } = response.data;
+            localStorage.setItem("token", token);
+            localStorage.setItem("role", role);
+            this.redirectUser(role);
           })
           .catch((error) => {
             console.error("There was a problem with the Axios request:", error);
             this.loginError = "Login failed. Please check your credentials and try again.";
           });
+    },
+    redirectUser(role) {
+      if (role === "EMPLOYEE") {
+        this.$router.push("/employeeView");
+      } else if (role === "CUSTOMER") {
+        this.$router.push("/customerDashboard");
+      }
     }
   }
 };
