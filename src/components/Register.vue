@@ -39,34 +39,55 @@
                   <DOBPicker v-model="dob"/>
                 </div>
               </div>
-              <div class="mb-3 row">
+              <div class="row mb-3">
                 <div class="col-md-6">
                   <label for="inputPassword" class="form-label form-text-lg">Password</label>
-                  <input v-model="password" type="password" class="form-control" id="inputPassword" required/>
+                  <input v-model="password"  type="password" class="form-control" id="inputPassword"
+                         required
+                         pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                         title="Password must contain at least 8 characters including uppercase, lowercase, numbers, and special characters."
+                  />
                 </div>
                 <div class="col-md-6">
                   <label for="inputConfirmPassword" class="form-label form-text-lg">Confirm Password</label>
-                  <input v-model="confirmPassword" type="password" class="form-control" id="inputConfirmPassword" required/>
+                  <input v-model="confirmPassword" type="password" class="form-control" id="inputConfirmPassword"
+                         required
+                         @input="checkPasswordMatch"
+                  />
                   <div v-if="confirmPassword && password !== confirmPassword" class="text-danger">Passwords do not match</div>
                 </div>
               </div>
-              <div class="mb-3 row">
+              <div class="row mb-3">
                 <div class="col-md-6">
                   <label for="inputBsn" class="form-label form-text-lg">BSN Number</label>
-                  <input v-model="bsn" id="inputBsn" type="text" class="form-control" required/>
+                  <input v-model="bsn" id="inputBsn" type="text" class="form-control"
+                         required
+                         pattern="\d{9}"
+                         maxlength="9"
+                         title="BSN number must be exactly 9 digits long."
+                  />
                   <div class="form-text text-dark">BSN number must be exactly 9 digits long.</div>
                 </div>
                 <div class="col-md-6">
                   <label for="inputPhoneNumber" class="form-label form-text-lg">Phone Number</label>
-                  <input v-model="phoneNumber" id="inputPhoneNumber" type="text" class="form-control" required/>
+                  <input v-model="phoneNumber" id="inputPhoneNumber" type="text" class="form-control"
+                         required
+                         pattern="\d{9}"
+                         maxlength="9"
+                         title="Phone number must be exactly 9 digits long."
+                  />
                   <div class="form-text text-dark">Phone number must be exactly 9 digits long.</div>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary btn-lg btn-block">Register</button>
+
+              <button type="submit" class="btn btn-primary btn-lg btn-block" :disabled="!passwordsMatch">Register</button>
             </form>
             <button class="btn btn-secondary btn-lg btn-block mt-3" @click="returnToLogin">Return to Login</button>
           </div>
         </div>
+      </div>
+      <div v-if="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
       </div>
     </div>
   </section>
@@ -91,7 +112,8 @@ export default {
       gender: 'male',
       dob: '',
       showSuccessMessage: false,
-      userInfo: {}
+      userInfo: {},
+      errorMessage: '', // Add error message state
     };
   },
   methods: {
@@ -112,14 +134,21 @@ export default {
         this.showSuccessMessage = true;
       } catch (error) {
         console.error("There was an error!", error);
+        this.errorMessage = error.response.data;
       }
     },
     returnToLogin() {
       this.$router.push('/login');
     }
+  },
+  computed: {
+    passwordsMatch() {
+      return this.password === this.confirmPassword;
+    }
   }
 };
 </script>
+
 
 <style scoped>
 .welcome-text {
