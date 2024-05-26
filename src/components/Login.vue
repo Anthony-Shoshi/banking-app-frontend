@@ -68,14 +68,17 @@ export default {
             localStorage.setItem("token", token);
             localStorage.setItem("role", role);
 
-            // Set user information in Vuex store
             this.$store.dispatch('login', { email: this.username, role: role, firstName: firstName, lastName: lastName });
 
             this.redirectUser(role);
           })
           .catch((error) => {
             console.error("There was a problem with the Axios request:", error);
-            this.loginError = "Login failed. Please check your credentials and try again.";
+            if (error.response && error.response.status === 401) {
+              this.loginError = error.response.data;
+            } else {
+              this.loginError = "Login failed. Please check your credentials and try again."; // Default error message
+            }
           });
     },
       redirectUser(role) {
