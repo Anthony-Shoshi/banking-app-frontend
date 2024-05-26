@@ -4,7 +4,6 @@ import Home from '../components/Home.vue';
 import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 import CustomerDashboard from '../components/User/UserDashboard.vue';
-import WaitingApproval from '../components/WaitingApproval.vue';
 import EmployeeView from '../components/EmployeeView.vue';
 import Customers from '../components/Customers/Customers.vue';
 import CustomerTransaction from '../components/Customers/CustomerTransaction.vue';
@@ -21,7 +20,6 @@ const routes = [
     { path: '/employees/customers-without-accounts', component: CustomersWithoutAccounts, meta: { role: 'EMPLOYEE' }},
     { path: '/customers/:customerId/transactions', component: CustomerTransaction, meta: { role: 'CUSTOMER' }},
     { path: '/transactions', component: ViewTransactionsList, meta: { role: 'EMPLOYEE' }},
-    { path: '/waitingapproval', name: 'WaitingApproval', component: WaitingApproval, props: true, meta: { role: 'EMPLOYEE' }},
 ];
 
 const router = createRouter({

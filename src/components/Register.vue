@@ -1,8 +1,7 @@
 <template>
   <section>
     <div class="container">
-      <WaitingApproval v-if="showSuccessMessage" :userInfo="userInfo"/>
-      <div v-else>
+      <div v-if="!showSuccessMessage">
         <div class="row">
           <div class="col-md-12">
             <h1 class="text-center welcome-text">Register New Customer</h1>
@@ -11,7 +10,6 @@
         <div class="row justify-content-center">
           <div class="col-md-6">
             <form @submit.prevent="registerCustomer" class="mt-4">
-              <!-- Form Fields -->
               <div class="mb-3">
                 <label for="inputGender" class="form-label form-text-lg">Gender</label>
                 <select v-model="gender" id="inputGender" class="form-select" required>
@@ -42,7 +40,7 @@
               <div class="row mb-3">
                 <div class="col-md-6">
                   <label for="inputPassword" class="form-label form-text-lg">Password</label>
-                  <input v-model="password"  type="password" class="form-control" id="inputPassword"
+                  <input v-model="password" type="password" class="form-control" id="inputPassword"
                          required
                          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                          title="Password must contain at least 8 characters including uppercase, lowercase, numbers, and special characters."
@@ -52,9 +50,10 @@
                   <label for="inputConfirmPassword" class="form-label form-text-lg">Confirm Password</label>
                   <input v-model="confirmPassword" type="password" class="form-control" id="inputConfirmPassword"
                          required
-                         @input="checkPasswordMatch"
                   />
-                  <div v-if="confirmPassword && password !== confirmPassword" class="text-danger">Passwords do not match</div>
+                  <div v-if="confirmPassword && password !== confirmPassword" class="text-danger">Passwords do not
+                    match
+                  </div>
                 </div>
               </div>
               <div class="row mb-3">
@@ -86,7 +85,14 @@
           </div>
         </div>
       </div>
-      <div v-if="errorMessage" class="alert alert-danger" role="alert">
+      <div v-if="showSuccessMessage" class="alert alert-success mt-4 lg">
+        <p class="mb-3" style="font-size: 22px;">Thank you for choosing FAFA bank, your request has been sent to the team and you will hear back from us in 2-3 working days. Your patience is appreciated. You can Log in to our system once your account has been approved.</p>
+        <div>
+          <button class="btn btn-primary mr-2" @click="returnToHomepage">Back to Homepage</button>
+          <button class="btn btn-secondary" @click="returnToLogin">Back to Login</button>
+        </div>
+      </div>
+      <div v-if="errorMessage" class="alert alert-danger mt-4" role="alert">
         {{ errorMessage }}
       </div>
     </div>
@@ -95,11 +101,10 @@
 
 <script>
 import axios from 'axios';
-import WaitingApproval from './WaitingApproval.vue';
 import DOBPicker from './DatePicker.vue';
 
 export default {
-  components: { WaitingApproval, DOBPicker },
+  components: { DOBPicker },
   data() {
     return {
       email: '',
@@ -109,11 +114,10 @@ export default {
       lastName: '',
       bsn: '',
       phoneNumber: '',
-      gender: 'male',
+      gender: '',
       dob: '',
       showSuccessMessage: false,
-      userInfo: {},
-      errorMessage: '', // Add error message state
+      errorMessage: '',
     };
   },
   methods: {
@@ -130,7 +134,6 @@ export default {
           gender: this.gender,
           DateOFbirth: this.dob
         });
-        this.userInfo = response.data;
         this.showSuccessMessage = true;
       } catch (error) {
         console.error("There was an error!", error);
@@ -139,7 +142,7 @@ export default {
     },
     returnToLogin() {
       this.$router.push('/login');
-    }
+    },
   },
   computed: {
     passwordsMatch() {
@@ -148,7 +151,6 @@ export default {
   }
 };
 </script>
-
 
 <style scoped>
 .welcome-text {
@@ -190,9 +192,5 @@ export default {
   background-color: #ffffff;
   color: #000000;
   border: none;
-}
-
-.success-message {
-  font-size: 18px;
 }
 </style>
