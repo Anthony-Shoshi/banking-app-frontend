@@ -11,6 +11,7 @@
         <div class="row justify-content-center">
           <div class="col-md-6">
             <form @submit.prevent="registerCustomer" class="mt-4">
+              <!-- Form Fields -->
               <div class="mb-3">
                 <label for="inputGender" class="form-label form-text-lg">Gender</label>
                 <select v-model="gender" id="inputGender" class="form-select" required>
@@ -32,32 +33,32 @@
               <div class="mb-3 row">
                 <div class="col-md-6">
                   <label for="inputEmail" class="form-label form-text-lg">Email</label>
-                  <input v-model="email" id="inputEmail" type="email" class="form-control" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
+                  <input v-model="email" id="inputEmail" type="email" class="form-control" required/>
                 </div>
                 <div class="col-md-6">
-                  <DOBPicker />
+                  <DOBPicker v-model="dob"/>
                 </div>
               </div>
               <div class="mb-3 row">
                 <div class="col-md-6">
                   <label for="inputPassword" class="form-label form-text-lg">Password</label>
-                  <input v-model="password" @input="showPasswordFormat" type="password" class="form-control" id="inputPassword" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"/>
+                  <input v-model="password" type="password" class="form-control" id="inputPassword" required/>
                 </div>
                 <div class="col-md-6">
                   <label for="inputConfirmPassword" class="form-label form-text-lg">Confirm Password</label>
-                  <input v-model="confirmPassword" type="password" class="form-control" id="inputConfirmPassword" required @input="checkPasswordMatch"/>
+                  <input v-model="confirmPassword" type="password" class="form-control" id="inputConfirmPassword" required/>
                   <div v-if="confirmPassword && password !== confirmPassword" class="text-danger">Passwords do not match</div>
                 </div>
               </div>
               <div class="mb-3 row">
                 <div class="col-md-6">
                   <label for="inputBsn" class="form-label form-text-lg">BSN Number</label>
-                  <input v-model="bsn" id="inputBsn" type="text" class="form-control" required pattern="\d{9}" maxlength="9"/>
+                  <input v-model="bsn" id="inputBsn" type="text" class="form-control" required/>
                   <div class="form-text text-dark">BSN number must be exactly 9 digits long.</div>
                 </div>
                 <div class="col-md-6">
                   <label for="inputPhoneNumber" class="form-label form-text-lg">Phone Number</label>
-                  <input v-model="phoneNumber" id="inputPhoneNumber" type="text" class="form-control" required pattern="\d{9}" maxlength="9"/>
+                  <input v-model="phoneNumber" id="inputPhoneNumber" type="text" class="form-control" required/>
                   <div class="form-text text-dark">Phone number must be exactly 9 digits long.</div>
                 </div>
               </div>
@@ -72,69 +73,51 @@
 </template>
 
 <script>
-import DOBPicker from '@/components/DatePicker.vue';
-import WaitingApproval from '@/components/WaitingApproval.vue';
+import axios from 'axios';
+import WaitingApproval from './WaitingApproval.vue';
+import DOBPicker from './DatePicker.vue';
 
 export default {
-  name: 'RegisterCustomer',
-  components: {
-    DOBPicker,
-    WaitingApproval,
-  },
+  components: { WaitingApproval, DOBPicker },
   data() {
     return {
-      firstName: '',
-      lastName: '',
       email: '',
       password: '',
       confirmPassword: '',
+      firstName: '',
+      lastName: '',
       bsn: '',
       phoneNumber: '',
-      gender: '',
-      accountType: '',
+      gender: 'male',
+      dob: '',
       showSuccessMessage: false,
-      userInfo: {}, // Initialize userInfo here
+      userInfo: {}
     };
   },
   methods: {
-    registerCustomer() {
-      // Set showSuccessMessage to true to display success message
-      this.showSuccessMessage = true;
-
-      // Push the route with userInfo as a parameter
-      this.$router.push({
-        name: 'WaitingApproval',
-        params: {
-          userInfo: {
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email,
-            password: this.password,
-            bsn: this.bsn,
-            phoneNumber: this.phoneNumber,
-            gender: this.gender,
-            accountType: this.accountType,
-          },
-        },
-      });
-
-      // Clear form fields after pushing the route
-      this.clearFields();
+    async registerCustomer() {
+      try {
+        const response = await axios.post('http://localhost:8080/register', {
+          email: this.email,
+          password: this.password,
+          confirmPassword: this.confirmPassword,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          bsn: this.bsn,
+          phoneNumber: this.phoneNumber,
+          gender: this.gender,
+          DateOFbirth: this.dob
+        });
+        this.userInfo = response.data;
+        this.showSuccessMessage = true;
+      } catch (error) {
+        console.error("There was an error!", error);
+      }
     },
     returnToLogin() {
       this.$router.push('/login');
-    },
-    clearFields() {
-      this.firstName = '';
-      this.lastName = '';
-      this.email = '';
-      this.password = '';
-      this.confirmPassword = '';
-      this.bsn = '';
-      this.phoneNumber = '';
-      this.gender = '';
-    },
-  },
+    }
+  }
 };
 </script>
 
