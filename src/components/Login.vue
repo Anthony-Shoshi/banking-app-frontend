@@ -44,7 +44,7 @@ export default {
       password: "",
       showUsernameError: false,
       showPasswordError: false,
-      loginError: null // Add a field to hold login errors
+      loginError: null
     };
   },
   methods: {
@@ -59,18 +59,34 @@ export default {
       axios
           .post("http://localhost:8080/login", {
             email: this.username,
-            password: this.password
+            password: this.password,
+            firstName: this.firstName,
+            lastName: this.lastName,
           })
           .then((response) => {
-            // Handle successful login
-            // Example: store the token in local storage and redirect
-            localStorage.setItem("token", response.data.token);
-            this.$router.push("/dashboard"); // Adjust the route as needed
+            const { token, role, firstName, lastName } = response.data;
+            localStorage.setItem("token", token);
+            localStorage.setItem("role", role);
+
+            this.$store.dispatch('login', { email: this.username, role: role, firstName: firstName, lastName: lastName });
+
+            this.redirectUser(role);
           })
           .catch((error) => {
             console.error("There was a problem with the Axios request:", error);
-            this.loginError = "Login failed. Please check your credentials and try again.";
+            if (error.response && error.response.status === 401) {
+              this.loginError = error.response.data;
+            } else {
+              this.loginError = "Login failed. Please check your credentials and try again."; // Default error message
+            }
           });
+    },
+      redirectUser(role) {
+      if (role === "EMPLOYEE") {
+        this.$router.push("/employeeView");
+      } else if (role === "CUSTOMER") {
+        this.$router.push("/customerDashboard");
+      }
     }
   }
 };

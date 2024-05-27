@@ -1,11 +1,12 @@
-<script setup>
-
-</script>
-
 <template>
-
+  <div>
+    <h1>Customer Dashboard</h1>
+    <p>Welcome to the customer dashboard!</p>
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<script>
+export default {
+  name: "CustomerDashboard"
+};
+</script>
