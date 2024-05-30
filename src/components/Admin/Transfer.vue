@@ -9,9 +9,10 @@
         <li @click="goTransfer">Transfer</li>
       </ul>
     </div>
+
     <div class="main">
-      <h1>Transfer</h1>
       <div class="transfer-form">
+        <h1>Transfer</h1>
         <form @submit.prevent="transferMoney">
           <div class="form-group">
             <label for="fromAccountIban">Source Account:</label>
@@ -72,43 +73,31 @@ export default {
     goTransfer() {
       this.$router.push({ path: "/transfer" });
     },
-    async transferMoney() {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("No token found. Please log in.");
-        }
 
-        console.log(`Token: ${token}`); // Log the token
-
-        const response = await axios.post(
+    transferMoney() {
+      axios
+        .post(
           "http://localhost:8080/transactions",
           {
-            
             fromAccountIban: this.fromAccountIban,
             toAccountIban: this.toAccountIban,
             transferAmount: this.transferAmount,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
           }
-        );
-        alert(`Transfer successful: ${response.data}`);
-      } catch (error) {
-        console.error("There was an error with the transfer:", error);
-        alert(
-          `Error: ${
-            error.response ? error.response.data.message : error.message
-          }`
-        );
-      }
+        )
+        .then((response) => {
+          alert(`Transfer successful: ${response.data}`);
+        })
+        .catch((error) => {
+          console.error("There was an error with the transfer:", error);
+          alert(
+            `Error: ${
+              error.response ? error.response.data.message : error.message
+            }`
+          );
+        });
     },
   },
 };
-
-
 </script>
 
 <style scoped>

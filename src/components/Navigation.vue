@@ -8,9 +8,9 @@
         <li v-if="isEmployee && isAuthenticated" class="nav-item">
           <router-link to="/employeeView" class="nav-link" active-class="active">Employee Dashboard</router-link>
         </li>
-        <li v-if="isEmployee && isAuthenticated" class="nav-item">
+        <!-- <li v-if="isEmployee && isAuthenticated" class="nav-item">
           <router-link to="/transactions" class="nav-link" active-class="active">Transactions</router-link>
-        </li>
+        </li> -->
         <li v-if="isCustomer && isAuthenticated" class="nav-item">
           <router-link to="/customerDashboard" class="nav-link" active-class="active">Customer Dashboard</router-link>
         </li>
