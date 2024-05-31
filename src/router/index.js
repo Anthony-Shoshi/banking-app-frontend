@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import store from '../stores/User.js';
+import store from '../stores/User';
 import Home from '../components/Home.vue';
 import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
@@ -13,13 +13,13 @@ import CustomersWithoutAccounts from '../components/Customers/customers-without-
 const routes = [
     { path: '/', component: Home },
     { path: '/login', component: Login },
-    { path: '/register', component: Register},
-    { path: '/customerDashboard', component: CustomerDashboard, meta: {  role: 'CUSTOMER' }},
-    { path: '/employeeView', component: EmployeeView, meta: { role: 'EMPLOYEE' }},
-    { path: '/employees/customer-accounts', component: Customers, meta: { role: 'EMPLOYEE' }},
-    { path: '/employees/customers-without-accounts', component: CustomersWithoutAccounts, meta: { role: 'EMPLOYEE' }},
-    { path: '/customers/:customerId/transactions', component: CustomerTransaction, meta: { role: 'CUSTOMER' }},
-    { path: '/transactions', component: ViewTransactionsList, meta: { role: 'EMPLOYEE' }},
+    { path: '/register', component: Register },
+    { path: '/customerDashboard', component: CustomerDashboard, meta: { role: 'CUSTOMER' } },
+    { path: '/employeeView', component: EmployeeView, meta: { role: 'EMPLOYEE' } },
+    { path: '/employees/customer-accounts', component: Customers, meta: { role: 'EMPLOYEE' } },
+    { path: '/employees/customers-without-accounts', component: CustomersWithoutAccounts, meta: { role: 'EMPLOYEE' } },
+    { path: '/customers/:customerId/transactions', component: CustomerTransaction, meta: { role: 'CUSTOMER' } },
+    { path: '/transactions', component: ViewTransactionsList, meta: { role: 'EMPLOYEE' } },
 ];
 
 const router = createRouter({
@@ -28,12 +28,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     const requiredRole = to.meta.role;
+    const isAuthenticated = store.getters.isAuthenticated;
+    const userRole = store.getters.user?.role;
 
-    if (requiresAuth && !store.getters.isAuthenticated) {
+    if (requiredRole && !isAuthenticated) {
         next('/login');
-    } else if (requiresAuth && requiredRole && !store.getters[requiredRole.toLowerCase()]) {
+    } else if (requiredRole && userRole !== requiredRole) {
         next('/');
     } else {
         next();

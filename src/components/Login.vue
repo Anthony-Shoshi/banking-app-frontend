@@ -35,6 +35,7 @@
 
 <script>
 import axios from "axios";
+import * as jwtDecode from "jwt-decode";
 
 export default {
   name: "Login",
@@ -57,37 +58,40 @@ export default {
     },
     fetchLogin() {
       axios
-          .post("http://localhost:8080/login", {
+          .post('http://localhost:8080/login', {
             email: this.username,
             password: this.password,
-            firstName: this.firstName,
-            lastName: this.lastName,
           })
           .then((response) => {
-            const { token, role, firstName, lastName } = response.data;
-            localStorage.setItem("token", token);
-            localStorage.setItem("role", role);
+            const {token} = response.data;
+            localStorage.setItem('token', token);
 
-            this.$store.dispatch('login', { email: this.username, role: role, firstName: firstName, lastName: lastName });
+            // Decode the token to extract user details
+            const decodedToken = jwtDecode(token);
+            const {firstName, lastName, role} = decodedToken;
 
-            this.redirectUser(role);
+            // Set user details in the Vuex store
+            this.$store.dispatch('login', {email: this.username, role, firstName, lastName});
+
+            // Redirect user based on role
+            if (role === 'EMPLOYEE') {
+              this.$router.push('/employeeView');
+            } else if (role === 'CUSTOMER') {
+              this.$router.push('/customerDashboard');
+            } else {
+              // Default redirection for any other role or scenarios
+              this.$router.push('/');
+            }
           })
           .catch((error) => {
-            console.error("There was a problem with the Axios request:", error);
+            console.error('There was a problem with the Axios request:', error);
             if (error.response && error.response.status === 401) {
               this.loginError = error.response.data;
             } else {
-              this.loginError = "Login failed. Please check your credentials and try again."; // Default error message
+              this.loginError = 'Login failed. Please check your credentials and try again.'; // Default error message
             }
           });
     },
-      redirectUser(role) {
-      if (role === "EMPLOYEE") {
-        this.$router.push("/employeeView");
-      } else if (role === "CUSTOMER") {
-        this.$router.push("/customerDashboard");
-      }
-    }
   }
 };
 </script>

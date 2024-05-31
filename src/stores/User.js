@@ -35,7 +35,7 @@ const store = createStore({
         logout({ commit }) {
             commit('logout');
             // Redirect to home ("/") after logout
-            window.location.href = "/";
+            window.location.href = '/';
         },
     },
 });
