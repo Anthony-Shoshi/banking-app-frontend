@@ -36,7 +36,6 @@
             </tr>
           </tbody>
         </table>
-        
       </div>
       <p v-else>No transactions available</p>
     </div>
@@ -44,7 +43,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
@@ -66,12 +65,23 @@ export default {
       this.$router.push({ path: "/employees/customers-without-accounts" });
     },
     goTransfer() {
-      this.$router.push({ path: '/transfer' });
+      this.$router.push({ path: "/transfer" });
     },
     fetchTransactions() {
+      // const token = localStorage.getItem("token");
+      // if (!token) {
+      //   console.error("Token not found");
+      //   return;
+      // }
       axios
-        .get("http://localhost:8080/transactions")
+        .get("http://localhost:8080/transactions", {
+          // headers: {
+          //   Authorization: `Bearer ${token}`,
+          //   "Content-Type": "application/json",
+          // },
+        })
         .then((response) => {
+         // console.log(response.data); // Check if data is fetched properly
           this.transactions = response.data;
         })
         .catch((error) => {

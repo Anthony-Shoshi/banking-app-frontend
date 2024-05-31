@@ -75,6 +75,12 @@ export default {
     },
 
     transferMoney() {
+      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+      if (!token) {
+        alert("User is not authenticated. Please log in.");
+        return;
+      }
+
       axios
         .post(
           "http://localhost:8080/transactions",
@@ -82,6 +88,12 @@ export default {
             fromAccountIban: this.fromAccountIban,
             toAccountIban: this.toAccountIban,
             transferAmount: this.transferAmount,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+              "Content-Type": "application/json", // Set the Content-Type header
+            },
           }
         )
         .then((response) => {

@@ -19,19 +19,18 @@
             <tr>
               <th>Name</th>
               <th>Account Number</th>
+              <!-- <th>DailyLimit</th> -->
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(customer, index) in customers" :key="index">
+            <tr v-for="(customer, index) in customers" :key="index" @click="openDailyLimitForm(customer.accountId)">
               <td>{{ customer.customerName }}</td>
               <td>{{ customer.IBAN }}</td>
+              <!-- <td>{{ customer.dailyLimit}}</td> -->
               <td>
                 <button @click="viewCustomerDetails(index)">
                   Transactions
-                </button>
-                <button @click="openDailyLimitForm(customer.accountId)">
-                  Update Daily Limit
                 </button>
               </td>
             </tr>
@@ -49,7 +48,7 @@
         <h2 class="transactionHead">Update Daily Limit</h2>
         <form class="transactionHead" @submit.prevent="updateDailyLimit">
           <label for="DailyLimit">New Daily Limit:</label>
-          <input type="number" id="DailyLimit" v-model="DailyLimit" required />
+          <input type="number" id="DailyLimit" v-model="newDailyLimit" required />
           <button type="submit">Update</button>
         </form>
       </div>
@@ -115,7 +114,7 @@ export default {
       try {
         await axios.put(`http://localhost:8080/employees/update-daily-limit`, {
           accountId: accountIdToUpdate.value,
-          DailyLimit: DailyLimit.value,
+          DailyLimit: newDailyLimit.value,
         });
         alert("Daily limit updated successfully.");
         showDailyLimitForm.value = false;
