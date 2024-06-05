@@ -23,7 +23,7 @@
       </ul>
       <div class="d-flex">
         <span v-if="isAuthenticated" class="navbar-text text-white me-3">Hello, {{ userName }}</span>
-        <button v-if="isAuthenticated" @click="logoutHandler" class="btn btn-outline-light">Logout</button>
+          <button v-if="isAuthenticated" @click="logoutHandler" class="btn btn-outline-light">Logout</button>
       </div>
     </div>
   </nav>

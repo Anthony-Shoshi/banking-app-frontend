@@ -1,41 +1,38 @@
 <template>
-  <section>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-6 d-flex align-items-center justify-content-center">
-          <div class="text-center">
-            <h1 class="welcome-text">Welcome to FAFA Bank</h1>
-            <img src="../assets/images/banking.png" alt="Bank Image" class="rounded img-fluid" />
-          </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6 d-flex align-items-center justify-content-center">
+        <div class="text-center">
+          <h1 class="welcome-text">Welcome to FAFA Bank</h1>
+          <img src="../assets/images/banking.png" alt="Bank Image" class="rounded img-fluid" />
         </div>
-        <div class="col-md-6 d-flex align-items-center justify-content-center">
-          <div class="login-form d-flex flex-column justify-content-center">
-            <h2 class="text-center"><strong>Login</strong></h2>
-            <form @submit.prevent="validateLogin">
-              <div class="mb-3">
-                <label for="inputUsername" class="form-label">Username</label>
-                <input v-model="username" id="inputUsername" type="text" class="form-control" required/>
-                <div v-if="showUsernameError" class="text-danger">Username is required</div>
-              </div>
-              <div class="mb-3">
-                <label for="inputPassword" class="form-label">Password</label>
-                <input v-model="password" type="password" class="form-control" id="inputPassword" required/>
-                <div v-if="showPasswordError" class="text-danger">Password is required</div>
-              </div>
-              <button type='submit' class="btn btn-primary btn-lg btn-block">Login</button>
-              <a href="/register" class="btn btn-link btn-lg btn-block">Don't have an account? Register!</a>
-              <div v-if="loginError" class="text-danger mt-3">{{ loginError }}</div>
-            </form>
-          </div>
+      </div>
+      <div class="col-md-6 d-flex align-items-center justify-content-center">
+        <div class="login-form d-flex flex-column justify-content-center">
+          <h2 class="text-center"><strong>Login</strong></h2>
+          <form @submit.prevent="validateLogin">
+            <div class="mb-3">
+              <label for="inputUsername" class="form-label">Username</label>
+              <input v-model="username" id="inputUsername" type="text" class="form-control" required/>
+              <div v-if="showUsernameError" class="text-danger">Username is required</div>
+            </div>
+            <div class="mb-3">
+              <label for="inputPassword" class="form-label">Password</label>
+              <input v-model="password" type="password" class="form-control" id="inputPassword" required/>
+              <div v-if="showPasswordError" class="text-danger">Password is required</div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
+            <a href="/register" class="btn btn-link btn-lg btn-block">Don't have an account? Register!</a>
+            <div v-if="loginError" class="text-danger mt-3">{{ loginError }}</div>
+          </form>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
-import * as jwtDecode from "jwt-decode";
 
 export default {
   name: "Login",
@@ -56,41 +53,35 @@ export default {
         this.fetchLogin();
       }
     },
-    fetchLogin() {
-      axios
-          .post('http://localhost:8080/login', {
-            email: this.username,
-            password: this.password,
-          })
-          .then((response) => {
-            const {token} = response.data;
-            localStorage.setItem('token', token);
+    async fetchLogin() {
+      try {
+        const response = await axios.post('http://localhost:8080/login', {
+          email: this.username,
+          password: this.password,
+        });
+        const { email, token } = response.data;
+        localStorage.setItem('token', token);
 
-            // Decode the token to extract user details
-            const decodedToken = jwtDecode(token);
-            const {firstName, lastName, role} = decodedToken;
+        // Dispatch login action with the token and wait for it to complete
+        await this.$store.dispatch('login', { token });
 
-            // Set user details in the Vuex store
-            this.$store.dispatch('login', {email: this.username, role, firstName, lastName});
-
-            // Redirect user based on role
-            if (role === 'EMPLOYEE') {
-              this.$router.push('/employeeView');
-            } else if (role === 'CUSTOMER') {
-              this.$router.push('/customerDashboard');
-            } else {
-              // Default redirection for any other role or scenarios
-              this.$router.push('/');
-            }
-          })
-          .catch((error) => {
-            console.error('There was a problem with the Axios request:', error);
-            if (error.response && error.response.status === 401) {
-              this.loginError = error.response.data;
-            } else {
-              this.loginError = 'Login failed. Please check your credentials and try again.'; // Default error message
-            }
-          });
+        // Redirect user based on role after login action is completed
+        const user = this.$store.state.user;
+        if (user.role === 'EMPLOYEE') {
+          this.$router.push('/employeeView');
+        } else if (user.role === 'CUSTOMER') {
+          this.$router.push('/customerDashboard');
+        } else {
+          this.$router.push('/');
+        }
+      } catch (error) {
+        console.error('There was a problem with the Axios request:', error);
+        if (error.response && error.response.status === 401) {
+          this.loginError = error.response.data;
+        } else {
+          this.loginError = 'Login failed. Please check your credentials and try again.'; // Default error message
+        }
+      }
     },
   }
 };
