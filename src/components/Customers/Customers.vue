@@ -4,31 +4,33 @@
     <div v-if="customers.length > 0 && selectedCustomerIndex === null">
       <table v-if="customers.length > 0">
         <thead>
-          <tr>
-            <th>Name</th>
-            <th>Account Number</th>
-            <th>Action</th>
-          </tr>
+        <tr>
+          <th>Name</th>
+          <th>Account Number</th>
+          <th>Action</th>
+        </tr>
         </thead>
         <tbody>
-          <tr v-for="(customer, index) in customers" :key="index">
-            <td>{{ customer.customerName }}</td>
-            <td>{{ customer.IBAN }}</td>
-            <td>
-              <button @click="viewCustomerDetails(index)">
-                Transactions
-              </button>
-            </td>
-          </tr>
+        <tr v-for="(customer, index) in customers" :key="index">
+          <td>{{ customer.customerName }}</td>
+          <td>{{ customer.IBAN }}</td>
+          <td>{{ customer.IBAN }}</td>
+          <td>{{ customer.IBAN }}</td>
+          <td>
+            <button @click="viewCustomerDetails(index)">
+              Transactions
+            </button>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
     <p v-else-if="customers.length === 0">No customers available</p>
     <CustomerTransactions
-      v-if="selectedCustomerIndex !== null"
-      :customerId="customers[selectedCustomerIndex].customerId"
-      :customerName="customers[selectedCustomerIndex].customerName"
-      @back="selectedCustomerIndex = null"
+        v-if="selectedCustomerIndex !== null"
+        :customerId="customers[selectedCustomerIndex].customerId"
+        :customerName="customers[selectedCustomerIndex].customerName"
+        @back="selectedCustomerIndex = null"
     />
   </div>
 </template>
@@ -48,7 +50,7 @@ export default {
 
     onMounted(async () => {
       try {
-        const response = await axios.get("/employees/customer-accounts");
+        const response = await axios.get("http://localhost:8080/employees/customer-accounts");
         if (response.data && response.data.length) {
           customers.value = response.data;
         } else {
@@ -67,6 +69,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .transactionHead {
