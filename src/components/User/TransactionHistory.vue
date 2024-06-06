@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="m-3">
         <h2>Transaction History</h2>
         <form @submit.prevent="fetchTransactions">
             <div class="row">
@@ -19,11 +19,11 @@
             <div class="row">
                 <div class="col-md-4">
                     <label for="fromAmount" class="form-label">From Amount</label>
-                    <input type="number" class="form-control" id="fromAmount" v-model.number="filters.fromAmount">
+                    <input type="number" class="form-control" id="fromAmount" min="0" v-model.number="filters.fromAmount">
                 </div>
                 <div class="col-md-4">
                     <label for="toAmount" class="form-label">To Amount</label>
-                    <input type="number" class="form-control" id="toAmount" v-model.number="filters.toAmount">
+                    <input type="number" class="form-control" id="toAmount" min="0" v-model.number="filters.toAmount">
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary">Filter</button>
@@ -35,14 +35,13 @@
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Type</th>
                     <th>Amount</th>
-                    <th>Status</th>
                     <th>Initiated By</th>
                     <th>From Account IBAN</th>
                     <th>To Account IBAN</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>Transfered By</th>
+                    <th>Type</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,14 +50,13 @@
                 </tr>
                 <tr v-else v-for="transaction in transactions" :key="transaction.currentTime">
                     <td>{{ transaction.currentTime }}</td>
-                    <td>{{ transaction.type }}</td>
                     <td>{{ transaction.transferAmount }}</td>
-                    <td>{{ transaction.status }}</td>
                     <td>{{ transaction.initiatedBy }}</td>
                     <td>{{ transaction.fromAccountIban }}</td>
                     <td>{{ transaction.toAccountIban }}</td>
-                    <td>{{ transaction.firstName }}</td>
-                    <td>{{ transaction.lastName }}</td>
+                    <td>{{ transaction.firstName }} {{ transaction.lastName }}</td>
+                    <td>{{ transaction.type }}</td>
+                    <td>{{ transaction.status }}</td>
                 </tr>
             </tbody>
         </table>
