@@ -1,29 +1,30 @@
 <template>
   <div>
+
     <h1 class="transactionHead">All Transactions</h1>
     <div v-if="transactions.length > 0">
       <table>
         <thead>
-          <tr>
-            <th>From Account</th>
-            <th>To Account</th>
-            <th>Transfer Amount</th>
-            <th>Timestamp</th>
-            <th>User Initiating Transfer</th>
-          </tr>
+        <tr>
+          <th>From Account</th>
+          <th>To Account</th>
+          <th>Transfer Amount</th>
+          <th>Timestamp</th>
+          <th>User Initiating Transfer</th>
+        </tr>
         </thead>
         <tbody>
-          <tr v-for ="(transaction, index) in transactions" :key="index">
-            <td>{{ transaction.fromAccountIban }}</td>
-            <td>{{ transaction.toAccountIban }}</td>
-            <td>{{ transaction.transferAmount }}</td>
-            <td>{{ transaction.currentTime }}</td>
-            <td>
-              {{
-                `${transaction.firstName} ${transaction.lastName} / ${transaction.initiatedBy}`
-              }}
-            </td>
-          </tr>
+        <tr v-for="(transaction, index) in transactions" :key="index">
+          <td>{{ transaction.fromAccountIban }}</td>
+          <td>{{ transaction.toAccountIban }}</td>
+          <td>{{ transaction.transferAmount }}</td>
+          <td>{{ transaction.currentTime }}</td>
+          <td>
+            {{
+              `${transaction.firstName} ${transaction.lastName} / ${transaction.initiatedBy}`
+            }}
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -32,36 +33,30 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import axios from "axios";
 
 export default {
-  name: 'TransactionList',
-  computed: mapState(['transactions']),
   data() {
     return {
-      loading: false,
-      errorMessage: ''
+      transactions: [],
     };
   },
-  methods: {
-    ...mapActions(['fetchTransactions']),
-    async loadTransactions() {
-      this.loading = true;
-      try {
-        await this.fetchTransactions();
-      } catch (error) {
-        this.errorMessage = 'Failed to load transactions. Please try again.';
-        console.error('Fetch Transactions Error:', error);
-      } finally {
-        this.loading = false;
-      }
-    }
-  },
   mounted() {
-    this.loadTransactions();
-  }
+    this.fetchTransactions();
+  },
+  methods: {
+    fetchTransactions() {
+      axios
+          .get("http://localhost:8080/transactions")
+          .then((response) => {
+            this.transactions = response.data;
+          })
+          .catch((error) => {
+            console.error("There was a problem with the Axios request:", error);
+          });
+    },
+  },
 };
-
 </script>
 
 
