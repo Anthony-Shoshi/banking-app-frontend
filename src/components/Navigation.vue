@@ -23,7 +23,7 @@
       </ul>
       <div class="d-flex">
         <span v-if="store.isLoggedIn" class="navbar-text text-white me-3">Hello, {{ store.user.firstName }} {{ store.user.lastName }}</span>
-        <button v-if="store.isLoggedIn" @click="logout" class="btn btn-outline-light">Logout</button>
+        <button v-if="store.isLoggedIn" @click="AtmLogout" class="btn btn-outline-light">Logout</button>
       </div>
       <div class="d-flex">
         <span v-if="isAuthenticated" class="navbar-text text-white me-3">Hello, {{ userName }}</span>
@@ -54,7 +54,7 @@ export default {
       // Redirect to home ("/") after logout
       this.$router.push('/');
     },
-    logout() {
+    AtmLogout() {
       this.store.logout();
       this.$router.push('/');
     },

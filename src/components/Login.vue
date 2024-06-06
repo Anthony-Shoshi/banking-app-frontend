@@ -64,11 +64,11 @@ export default {
             lastName: this.lastName,
           })
           .then((response) => {
-            const { token, role, firstName, lastName } = response.data;
+            const { token, role, firstName, lastName, customerId } = response.data;
             localStorage.setItem("token", token);
             localStorage.setItem("role", role);
 
-            this.$store.dispatch('login', { email: this.username, role: role, firstName: firstName, lastName: lastName });
+            this.$store.dispatch('login', { email: this.username, role: role, firstName: firstName, lastName: lastName, customerId: customerId });
 
             this.redirectUser(role);
           })

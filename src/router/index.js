@@ -12,6 +12,7 @@ import CustomersWithoutAccounts from '../components/Customers/customers-without-
 import Transfer from '../components/Admin/Transfer.vue';
 import ATMInterface from '../components/User/ATM/ATMInterface.vue';
 import ATMLogin from '../components/User/ATM/ATMLogin.vue';
+import TransactionHistory from '../components/User/TransactionHistory.vue';
 
 const routes = [
   { path: '/', component: Home },
@@ -25,7 +26,8 @@ const routes = [
   { path: '/transactions', component: ViewTransactionsList, meta: { role: 'EMPLOYEE' } },
   { path: '/transfer', component: Transfer, meta: { role: 'EMPLOYEE' } },
   { path: '/atm/login', component: ATMLogin },
-  { path: '/atm', component: ATMInterface }
+  { path: '/atm', component: ATMInterface },
+  { path: '/transaction-history', component: TransactionHistory }
 ];
 
 const router = createRouter({

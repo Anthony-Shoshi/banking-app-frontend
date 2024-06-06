@@ -5,7 +5,7 @@ export const useStore = defineStore('customer', {
     state: () => ({
         token: '',
         accounts: [],
-        user: {},
+        user: JSON.parse(localStorage.getItem('user')) || {},
         isLoggedIn: false,
     }),
     actions: {
