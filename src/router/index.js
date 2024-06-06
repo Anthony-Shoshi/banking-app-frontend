@@ -13,12 +13,17 @@ import Transfer from '../components/Admin/Transfer.vue';
 import ATMInterface from '../components/User/ATM/ATMInterface.vue';
 import ATMLogin from '../components/User/ATM/ATMLogin.vue';
 import TransactionHistory from '../components/User/TransactionHistory.vue';
+import FundTransfer from '../components/User/FundTransfer.vue';
 
 const routes = [
   { path: '/', component: Home },
   { path: '/login', component: Login },
   { path: '/register', component: Register },
-  { path: '/customerDashboard', component: CustomerDashboard, meta: { role: 'CUSTOMER' } },
+  { path: '/customerDashboard', component: CustomerDashboard, meta: { role: 'CUSTOMER' }, 
+  children: [
+    { path: '/transaction-history', component: TransactionHistory },
+    { path: '/fund-transfer', component: FundTransfer }
+  ] },
   { path: '/employeeView', component: EmployeeView, meta: { role: 'EMPLOYEE' } },
   { path: '/employees/customer-accounts', component: Customers, meta: { role: 'EMPLOYEE' } },
   { path: '/employees/customers-without-accounts', component: CustomersWithoutAccounts, meta: { role: 'EMPLOYEE' } },
@@ -26,8 +31,7 @@ const routes = [
   { path: '/transactions', component: ViewTransactionsList, meta: { role: 'EMPLOYEE' } },
   { path: '/transfer', component: Transfer, meta: { role: 'EMPLOYEE' } },
   { path: '/atm/login', component: ATMLogin },
-  { path: '/atm', component: ATMInterface },
-  { path: '/transaction-history', component: TransactionHistory }
+  { path: '/atm', component: ATMInterface }
 ];
 
 const router = createRouter({
