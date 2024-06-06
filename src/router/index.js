@@ -34,9 +34,10 @@ router.beforeEach((to, from, next) => {
 
     if (requiredRole && !isAuthenticated) {
         next('/login');
-    } else if (requiredRole && userRole !== requiredRole) {
-        next('/');
-    } else {
+    } if (requiredRole && userRole !== requiredRole) {
+        return;
+    }
+    else {
         next();
     }
 });
