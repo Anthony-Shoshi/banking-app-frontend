@@ -48,7 +48,7 @@ export default {
 
     onMounted(async () => {
       try {
-        const response = await axios.get("http://localhost:8080/employees/customer-accounts");
+        const response = await axios.get("/employees/customer-accounts");
         if (response.data && response.data.length) {
           customers.value = response.data;
         } else {

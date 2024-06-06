@@ -15,10 +15,9 @@
           <td>{{ customer.name }}</td>
           <td>{{ customer.status }}</td>
           <td>
-            <button  @click="openModal(customer.userId)">
+            <button @click="openModal(customer.userId)">
               Approve Customer
             </button>
-
           </td>
         </tr>
         </tbody>
@@ -59,6 +58,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import axios from "axios";
 import { onMounted, ref, reactive } from "vue";
@@ -74,26 +74,22 @@ export default {
     });
 
     onMounted(async () => {
+      await fetchCustomerAccounts();
+    });
+
+    async function fetchCustomerAccounts() {
       try {
         const response = await axios.get("http://localhost:8080/employees/customers-without-accounts");
-        if (response.data && response.data.length) {
-          customers.value = response.data.map(customer => ({
-            ...customer,
-            age: calculateAge(customer.dob) // user DateOFbirth
-          }));
+        // Check if response.data is an array
+        if (Array.isArray(response.data)) {
+          customers.value = response.data;
         } else {
-          console.error("No customers found");
+          console.error("Data received is not an array:", response.data);
+          customers.value = []; // Reset to empty array if data is invalid
         }
       } catch (error) {
         console.error("Failed to fetch customer accounts:", error);
       }
-    });
-
-    function calculateAge(dob) {
-      const birthDate = new Date(dob);
-      const difference = Date.now() - birthDate.getTime();
-      const ageDate = new Date(difference);
-      return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
 
     function openModal(customerId) {
@@ -111,9 +107,8 @@ export default {
         absoluteLimitForSaving: form.absoluteLimitForSaving
       };
       try {
-        const response =await axios.put(`http://localhost:8080/employees/customers-without-accounts/${customerId}/approve-signup`, data);
+        const response = await axios.put(`http://localhost:8080/employees/customers-without-accounts/${customerId}/approve-signup`, data);
         if (response.status === 200) {
-          // Filter out the approved customer from the list
           customers.value = customers.value.filter(customer => customer.userId !== customerId);
           $('#approveModal').modal('hide');
           alert("Customer approved and account created.");
@@ -124,10 +119,11 @@ export default {
       }
     }
 
-    return { customers, modalCustomer, form, openModal, approveCustomer };
+    return { customers, modalCustomer, form, openModal, approveCustomer, fetchCustomerAccounts };
   },
 };
 </script>
+
 
 <style scoped>
 table {

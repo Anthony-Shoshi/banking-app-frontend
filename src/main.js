@@ -11,6 +11,21 @@ if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
+// Adding Axios interceptors
+axios.interceptors.request.use(request => {
+    console.log('Starting Request', request);
+    return request;
+});
+
+axios.interceptors.response.use(response => {
+    console.log('Response:', response);
+    return response;
+}, error => {
+    // Always handle errors
+    console.error('Response Error:', error);
+    return Promise.reject(error);
+});
+
 const app = createApp(App);
 app.use(router);
 app.use(store);

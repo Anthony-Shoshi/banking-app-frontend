@@ -1,11 +1,12 @@
 import { createStore } from 'vuex';
-import axios from 'axios';
+import axios from ".././axios";
 
 const store = createStore({
     state() {
         return {
             user: null,
             token: null,
+            transactions: []
         };
     },
     getters: {
@@ -25,6 +26,9 @@ const store = createStore({
             localStorage.setItem('token', token);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         },
+        setTransactions(state, transactions) {
+            state.transactions = transactions;
+        },
         logout(state) {
             state.user = null;
             state.token = null;
@@ -33,12 +37,10 @@ const store = createStore({
             delete axios.defaults.headers.common['Authorization'];
         },
         initializeStore(state) {
-            const user = localStorage.getItem('user');
+            const user = JSON.parse(localStorage.getItem('user'));
             const token = localStorage.getItem('token');
-            if (user) {
-                state.user = JSON.parse(user);
-            }
-            if (token) {
+            if (user && token) {
+                state.user = user;
                 state.token = token;
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             }
@@ -65,6 +67,15 @@ const store = createStore({
                 return { success: false, message: error.message || "Login failed. Please check your credentials." };
             }
         },
+        async fetchTransactions({ commit }) {
+            try {
+                const response = await axios.get('http://localhost:8080/transactions');
+                console.log('Received transactions:', response.data);  // Add this line to debug received data
+                commit('setTransactions', response.data);
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+            }
+        }
     },
 });
 
@@ -87,7 +98,6 @@ function decodeToken(token) {
         return null;
     }
 }
-
 store.commit('initializeStore');
 
 export default store;
