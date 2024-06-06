@@ -62,17 +62,19 @@ export default {
         const { email, token } = response.data;
         localStorage.setItem('token', token);
 
-        // Dispatch login action with the token and wait for it to complete
-        await this.$store.dispatch('login', { token });
+        const loginResult = await this.$store.dispatch('login', { token });
 
-        // Redirect user based on role after login action is completed
-        const user = this.$store.state.user;
-        if (user.role === 'EMPLOYEE') {
-          this.$router.push('/employeeView');
-        } else if (user.role === 'CUSTOMER') {
-          this.$router.push('/customerDashboard');
+        if (loginResult.success) {
+          const user = this.$store.state.user;
+          if (user.role === 'EMPLOYEE') {
+            this.$router.push('/employeeView');
+          } else if (user.role === 'CUSTOMER') {
+            this.$router.push('/customerDashboard');
+          } else {
+            this.$router.push('/');
+          }
         } else {
-          this.$router.push('/');
+          this.loginError = loginResult.message;
         }
       } catch (error) {
         console.error('There was a problem with the Axios request:', error);

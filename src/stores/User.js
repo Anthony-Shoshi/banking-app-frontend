@@ -6,30 +6,31 @@ const store = createStore({
         return {
             user: null,
             token: null,
-            userRole: null,
         };
     },
     getters: {
         isAuthenticated: (state) => !!state.user,
         isEmployee: (state) => state.user?.role === 'EMPLOYEE',
         isCustomer: (state) => state.user?.role === 'CUSTOMER',
+        user: (state) => state.user,
         userName: (state) => `${state.user?.firstName} ${state.user?.lastName}`,
     },
     mutations: {
         setUser(state, user) {
             state.user = user;
-            state.userRole = user.role;
             localStorage.setItem('user', JSON.stringify(user));
         },
         setToken(state, token) {
             state.token = token;
             localStorage.setItem('token', token);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         },
         logout(state) {
             state.user = null;
             state.token = null;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
+            delete axios.defaults.headers.common['Authorization'];
         },
         initializeStore(state) {
             const user = localStorage.getItem('user');
@@ -39,11 +40,12 @@ const store = createStore({
             }
             if (token) {
                 state.token = token;
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             }
         },
     },
     actions: {
-        async login({commit}, {token}) {
+        async login({ commit }, { token }) {
             try {
                 const decoded = decodeToken(token);
                 if (!decoded) {
@@ -53,14 +55,14 @@ const store = createStore({
                     id: decoded.sub,
                     role: decoded.auth,
                     firstName: decoded.firstName,
-                    lastName: decoded.lastName
+                    lastName: decoded.lastName,
                 };
                 commit('setUser', user);
                 commit('setToken', token);
-                return {success: true, message: "Login successful!"};
+                return { success: true, message: "Login successful!" };
             } catch (error) {
                 console.error("Login Error:", error);
-                return {success: false, message: error.message || "Login failed. Please check your credentials."};
+                return { success: false, message: error.message || "Login failed. Please check your credentials." };
             }
         },
     },
