@@ -128,7 +128,8 @@ export default {
                 });
         },
         async getUserIban() {
-            const user = this.store.user;
+            // const user = this.store.user;
+            const user = JSON.parse(localStorage.getItem('user'));
             if (user && user.firstName && user.lastName) {
                 try {
                     const response = await axios.get('http://localhost:8080/customers/search-iban', {

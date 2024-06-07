@@ -17,7 +17,7 @@ export const useStore = defineStore('customer', {
                 this.isLoggedIn = true;
                 this.getAccounts(this.user.userId);
             } catch (error) {
-                console.error('Login failed:', error);
+                throw new Error(error.response.data || 'Login failed');
             }
         },
         async getAccounts(userId) {

@@ -19,7 +19,8 @@
             <div class="row">
                 <div class="col-md-4">
                     <label for="fromAmount" class="form-label">From Amount</label>
-                    <input type="number" class="form-control" id="fromAmount" min="0" v-model.number="filters.fromAmount">
+                    <input type="number" class="form-control" id="fromAmount" min="0"
+                        v-model.number="filters.fromAmount">
                 </div>
                 <div class="col-md-4">
                     <label for="toAmount" class="form-label">To Amount</label>
@@ -31,35 +32,37 @@
             </div>
         </form>
 
-        <table class="table mt-3">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Initiated By</th>
-                    <th>From Account IBAN</th>
-                    <th>To Account IBAN</th>
-                    <th>Transfered By</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-if="transactions.length === 0">
-                    <td colspan="9" class="text-center">No data found</td>
-                </tr>
-                <tr v-else v-for="transaction in transactions" :key="transaction.currentTime">
-                    <td>{{ transaction.currentTime }}</td>
-                    <td>{{ transaction.transferAmount }}</td>
-                    <td>{{ transaction.initiatedBy }}</td>
-                    <td>{{ transaction.fromAccountIban }}</td>
-                    <td>{{ transaction.toAccountIban }}</td>
-                    <td>{{ transaction.firstName }} {{ transaction.lastName }}</td>
-                    <td>{{ transaction.type }}</td>
-                    <td>{{ transaction.status }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table class="table table-responsive table-striped table-hover mt-3">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Initiated By</th>
+                        <th>From Account IBAN</th>
+                        <th>To Account IBAN</th>
+                        <th>Transfered By</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-if="transactions.length === 0">
+                        <td colspan="9" class="text-center">No data found</td>
+                    </tr>
+                    <tr v-else v-for="transaction in transactions" :key="transaction.currentTime">
+                        <td>{{ transaction.currentTime }}</td>
+                        <td>{{ transaction.transferAmount }}</td>
+                        <td>{{ transaction.initiatedBy }}</td>
+                        <td>{{ transaction.fromAccountIban }}</td>
+                        <td>{{ transaction.toAccountIban }}</td>
+                        <td>{{ transaction.firstName }} {{ transaction.lastName }}</td>
+                        <td>{{ transaction.type }}</td>
+                        <td>{{ transaction.status }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -117,5 +120,15 @@ form {
 .table {
     width: 100%;
     margin-top: 20px;
+}
+
+.table-container {
+    height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
+.table th,
+.table td {
+    white-space: nowrap;
 }
 </style>

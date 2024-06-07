@@ -51,17 +51,30 @@
       </div>
     </div>
   </section>
-
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: "Home",
+  computed: {
+    ...mapGetters(['isAuthenticated', 'isEmployee', 'isCustomer', 'userName'])
+  },
+  beforeMount() {
+    if (this.isAuthenticated) {
+      const role = this.$store.state.user.role;
+      if (role === "EMPLOYEE") {
+        this.$router.push("/employeeView");
+      } else if (role === "CUSTOMER") {
+        this.$router.push("/customerDashboard");
+      }
+    }
+  }
 };
 </script>
 
 <style scoped>
-
 .welcome-text {
   color: #60BFC1;
   font-size: 80px;

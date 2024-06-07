@@ -12,12 +12,15 @@
           <router-link to="/transaction-history" class="nav-link">Transaction History</router-link>
         </li>
         <li class="mb-2">
-          <router-link to="/fund-transfer" class="nav-link">Transfer</router-link>
+          <router-link to="/fund-transfer" class="nav-link">Transfer Other Customer</router-link>
+        </li>
+        <li class="mb-2">
+          <router-link to="/fund-transfer-own" class="nav-link">Transfer Own Account</router-link>
         </li>
       </ul>
     </nav>
 
-    <div id="content" class="p-4 p-md-5 flex-grow-1">      
+    <div id="content" class="p-4 p-md-5 flex-grow-1">
       <router-view></router-view>
     </div>
   </div>

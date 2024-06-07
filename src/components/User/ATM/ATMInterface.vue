@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container mt-3">
         <h2>Accounts</h2>
         <div v-for="account in store.accounts" :key="account.id" class="card mb-3">
             <div class="card-body">

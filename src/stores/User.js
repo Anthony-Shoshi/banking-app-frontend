@@ -20,6 +20,8 @@ const store = createStore({
         logout(state) {
             state.user = null;
             localStorage.removeItem('user');
+            localStorage.removeItem("token");
+            localStorage.removeItem("role");
         },
         initializeStore(state) {
             const user = localStorage.getItem('user');
