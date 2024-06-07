@@ -9,6 +9,7 @@ import Customers from '../components/Customers/Customers.vue';
 import CustomerTransaction from '../components/Customers/CustomerTransaction.vue';
 import ViewTransactionsList from '../components/Transactions/ViewTransactionsList.vue';
 import CustomersWithoutAccounts from '../components/Customers/customers-without-accounts.vue';
+import Transfer from '../components/Admin/Transfer.vue';
 
 const routes = [
     { path: '/', component: Home },
@@ -20,6 +21,7 @@ const routes = [
     { path: '/employees/customers-without-accounts', component: CustomersWithoutAccounts, meta: { role: 'ROLE_EMPLOYEE' } },
     { path: '/customers/:customerId/transactions', component: CustomerTransaction, meta: { role: 'ROLE_CUSTOMER' } },
     { path: '/transactions', component: ViewTransactionsList, meta: { role: 'ROLE_EMPLOYEE' } },
+    { path: '/transfer', component: Transfer, meta: { role: 'ROLE_EMPLOYEE' }},
 ];
 
 const router = createRouter({

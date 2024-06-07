@@ -6,7 +6,7 @@
         <li @click="goToCustomers">Customers</li>
         <li @click="goToTransactions">All Transactions</li>
         <li @click="goCustomersWithoutAccounts">Customers-without-accounts</li>
-
+        <li @click="goTransfer">Transfer</li>
       </ul>
     </div>
     <div class="main">
@@ -26,6 +26,9 @@ export default {
     },
     goCustomersWithoutAccounts() {
       this.$router.push({ path: '/employees/customers-without-accounts' });
+    },
+    goTransfer() {
+      this.$router.push({ path: '/transfer' });
     }
   }
 };
