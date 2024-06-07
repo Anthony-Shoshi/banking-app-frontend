@@ -19,7 +19,7 @@
             <tr>
               <th>Name</th>
               <th>Account Number</th>
-              <!-- <th>DailyLimit</th> -->
+              <th>Account Type</th>
               <th>Action</th>
             </tr>
           </thead>
