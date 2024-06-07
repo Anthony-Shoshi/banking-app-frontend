@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 import store from "../stores/User";
 import Home from "../components/Home.vue";
 import Login from "../components/Login.vue";
@@ -18,53 +18,52 @@ import FundTransferOwn from "../components/User/FundTransferOwn.vue";
 import CustomerHome from "../components/User/CustomerHome.vue";
 
 const routes = [
-    { path: "/", component: Home },
-    { path: "/login", component: Login },
-    { path: "/register", component: Register },
+    {path: "/", component: Home},
+    {path: "/login", component: Login},
+    {path: "/register", component: Register},
     {
         path: "/customerDashboard",
         component: CustomerDashboard,
-        meta: { role: "ROLE_CUSTOMER" },
+        meta: {role: "ROLE_CUSTOMER"},
     },
     {
         path: "/employeeView",
         component: EmployeeView,
-        meta: { role: "ROLE_EMPLOYEE" },
+        meta: {role: "ROLE_EMPLOYEE"},
     },
     {
         path: "/employees/customer-accounts",
         component: Customers,
-        meta: { role: "ROLE_EMPLOYEE" },
+        meta: {role: "ROLE_EMPLOYEE"},
     },
     {
         path: "/employees/customers-without-accounts",
         component: CustomersWithoutAccounts,
-        meta: { role: "ROLE_EMPLOYEE" },
+        meta: {role: "ROLE_EMPLOYEE"},
     },
     {
         path: "/customers/:customerId/transactions",
         component: CustomerTransaction,
-        meta: { role: "ROLE_CUSTOMER" },
+        meta: {role: "ROLE_CUSTOMER"},
     },
     {
         path: "/transactions",
         component: ViewTransactionsList,
-        meta: { role: "ROLE_EMPLOYEE" },
+        meta: {role: "ROLE_EMPLOYEE"},
     },
-    { path: "/transfer", component: Transfer, meta: { role: "ROLE_EMPLOYEE" } },
+    {path: "/transfer", component: Transfer, meta: {role: "ROLE_EMPLOYEE"}},
     {
         path: "/customerDashboard",
         component: CustomerDashboard,
-        meta: { role: "CUSTOMER" },
+        meta: {role: "CUSTOMER"},
         children: [
-            { path: "", component: CustomerHome },
-            { path: "/transaction-history", component: TransactionHistory },
-            { path: "/fund-transfer", component: FundTransfer },
-            { path: "/fund-transfer-own", component: FundTransferOwn },
+            {path: "/transaction-history", component: TransactionHistory},
+            {path: "/fund-transfer", component: FundTransfer},
+            {path: "/fund-transfer-own", component: FundTransferOwn},
         ],
     },
-    { path: "/atm/login", component: ATMLogin },
-    { path: "/atm", component: ATMInterface },
+    {path: "/atm/login", component: ATMLogin},
+    {path: "/atm", component: ATMInterface},
 ];
 
 const router = createRouter({
@@ -81,7 +80,7 @@ router.beforeEach((to, from, next) => {
         next("/login");
     }
     if (requiredRole && userRole !== requiredRole) {
-        return;
+
     } else {
         next();
     }

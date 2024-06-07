@@ -58,6 +58,7 @@ const store = createStore({
                     role: decoded.auth,
                     firstName: decoded.firstName,
                     lastName: decoded.lastName,
+                    customerID: decoded.customerId,
                 };
                 commit("setUser", user);
                 commit("setToken", token);

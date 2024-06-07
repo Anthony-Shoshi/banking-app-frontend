@@ -20,12 +20,12 @@
       </ul>
       <div class="d-flex">
         <span v-if="store.isLoggedIn" class="navbar-text text-white me-3">Hello, {{ store.user.firstName }} {{
-          store.user.lastName }}</span>
+            store.user.lastName }}</span>
         <button v-if="store.isLoggedIn" @click="AtmLogout" class="btn btn-outline-light">Logout</button>
       </div>
       <div class="d-flex">
         <span v-if="isAuthenticated" class="navbar-text text-white me-3">Hello, {{ userName }}</span>
-          <button v-if="isAuthenticated" @click="logoutHandler" class="btn btn-outline-light">Logout</button>
+        <button v-if="isAuthenticated" @click="logoutHandler" class="btn btn-outline-light">Logout</button>
       </div>
     </div>
   </nav>
@@ -47,31 +47,30 @@ export default {
     const isAtmLogin = ref(false);
 
     watch(
-      () => route.path,
-      (newPath) => {
-        hideNavBar.value = newPath === '/atm/login';
-        isAtmLogin.value = newPath.startsWith('/atm');
-      },
-      { immediate: true }
+        () => route.path,
+        (newPath) => {
+         // hideNavBar.value = newPath === '/atm/login';
+          //isAtmLogin.value = newPath.startsWith('/atm');
+        },
+        { immediate: true }
     );
-
-    const logoutHandler = () => {
-      store.logout();
-      router.push('/');
-    };
 
     const AtmLogout = () => {
       store.logout();
       router.push('/');
     };
 
-    return { store, hideNavBar, isAtmLogin, route, router, logoutHandler, AtmLogout };
+    return { store, hideNavBar, isAtmLogin, route, router, AtmLogout };
   },
   computed: {
     ...mapGetters(['isAuthenticated', 'isEmployee', 'isCustomer', 'userName']),
   },
   methods: {
     ...mapMutations(['logout']),
+    logoutHandler() {
+      this.logout();
+      this.$router.push('/');
+    },
   },
 };
 </script>
