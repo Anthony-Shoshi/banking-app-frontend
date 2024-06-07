@@ -15,7 +15,6 @@ import ATMLogin from "../components/User/ATM/ATMLogin.vue";
 import TransactionHistory from "../components/User/TransactionHistory.vue";
 import FundTransfer from "../components/User/FundTransfer.vue";
 import FundTransferOwn from "../components/User/FundTransferOwn.vue";
-import CustomerHome from "../components/User/CustomerHome.vue";
 
 const routes = [
     {path: "/", component: Home},
@@ -57,13 +56,13 @@ const routes = [
         component: CustomerDashboard,
         meta: {role: "CUSTOMER"},
         children: [
-            {path: "/transaction-history", component: TransactionHistory},
-            {path: "/fund-transfer", component: FundTransfer},
-            {path: "/fund-transfer-own", component: FundTransferOwn},
+            {path: "/transaction-history", component: TransactionHistory, meta: {role: "ROLE_CUSTOMER"},},
+            {path: "/fund-transfer", component: FundTransfer, meta: {role: "ROLE_CUSTOMER"},},
+            {path: "/fund-transfer-own", component: FundTransferOwn, meta: {role: "ROLE_CUSTOMER"},},
         ],
     },
-    {path: "/atm/login", component: ATMLogin},
-    {path: "/atm", component: ATMInterface},
+    {path: "/atm/login", component: ATMLogin, meta: {role: "ROLE_CUSTOMER"},},
+    {path: "/atm", component: ATMInterface, meta: {role: "ROLE_CUSTOMER"},},
 ];
 
 const router = createRouter({
