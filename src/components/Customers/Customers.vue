@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <div class="sidebar">
       <h3>Employee Dashboard</h3>
       <ul>
@@ -14,24 +13,26 @@
     <div class="main">
       <h1 class="transactionHead">Customers</h1>
       <div v-if="customers.length > 0 && selectedCustomerIndex === null">
-        <table v-if="customers.length > 0">
+        <table>
           <thead>
             <tr>
               <th>Name</th>
               <th>Account Number</th>
-              <th>Account Type</th>
-              <th>Action</th>
+              <th>Daily Limit</th>
+              <th>Absolute Limit</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(customer, index) in customers" :key="index" @click="openDailyLimitForm(customer.accountId)">
+            <tr v-for="(customer, index) in customers" :key="index">
               <td>{{ customer.customerName }}</td>
               <td>{{ customer.IBAN }}</td>
-              <td>{{ customer.accountType }}</td>
+              <td>{{ customer.dailyLimit }}</td>
+              <td>{{ customer.absoluteLimit }}</td>
               <td>
-                <button @click="viewCustomerDetails(index)">
-                  Transactions
-                </button>
+                <button class="btn" @click="viewCustomerDetails(index)">Transactions</button>
+                <button class="btn" @click.stop="openDailyLimitForm(customer.accountId)">Edit Daily Limit</button>
+                <button class="btn" @click.stop="openAbsoluteLimitForm(customer.accountId)">Edit Absolute Limit</button>
               </td>
             </tr>
           </tbody>
@@ -52,45 +53,45 @@
           <button type="submit">Update</button>
         </form>
       </div>
+      <div v-if="showAbsoluteLimitForm">
+        <h2 class="transactionHead">Update Absolute Limit</h2>
+        <form class="transactionHead" @submit.prevent="updateAbsoluteLimit">
+          <label for="AbsoluteLimit">New Absolute Limit:</label>
+          <input type="number" id="AbsoluteLimit" v-model="newAbsoluteLimit" required />
+          <button type="submit">Update</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import { onMounted, ref } from "vue";
-import CustomerTransactions from "./CustomerTransaction.vue";
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import CustomerTransactions from './CustomerTransaction.vue';
 
 export default {
   components: {
     CustomerTransactions,
   },
-  methods: {
-    goToCustomers() {
-      this.$router.push({ path: "/employees/customer-accounts" });
-    },
-    goToTransactions() {
-      this.$router.push({ path: "/transactions" });
-    },
-    goCustomersWithoutAccounts() {
-      this.$router.push({ path: "/employees/customers-without-accounts" });
-    },
-    goTransfer() {
-      this.$router.push({ path: "/transfer" });
-    },
-  },
   setup() {
+    const router = useRouter();
     const customers = ref([]);
     const selectedCustomerIndex = ref(null);
     const showDailyLimitForm = ref(false);
+    const showAbsoluteLimitForm = ref(false);
     const accountIdToUpdate = ref(null);
     const newDailyLimit = ref(null);
+    const newAbsoluteLimit = ref(null);
 
-    onMounted(async () => {
+    onMounted(() => {
+      fetchCustomers();
+    });
+
+    const fetchCustomers = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/employees/customer-accounts"
-        );
+        const response = await axios.get("http://localhost:8080/employees/customer-accounts");
         if (response.data && response.data.length) {
           customers.value = response.data;
         } else {
@@ -99,43 +100,89 @@ export default {
       } catch (error) {
         console.error("Failed to fetch customer accounts:", error);
       }
-    });
+    };
 
-    function viewCustomerDetails(index) {
+    const viewCustomerDetails = (index) => {
       selectedCustomerIndex.value = index;
-    }
+    };
 
-    function openDailyLimitForm(accountId) {
-      showDailyLimitForm.value = true;
+    const openDailyLimitForm = (accountId) => {
       accountIdToUpdate.value = accountId;
-    }
+      showDailyLimitForm.value = true;
+      showAbsoluteLimitForm.value = false;  // Ensure only one form is open at a time
+    };
 
-    async function updateDailyLimit() {
+    const openAbsoluteLimitForm = (accountId) => {
+      accountIdToUpdate.value = accountId;
+      showAbsoluteLimitForm.value = true;
+      showDailyLimitForm.value = false;  // Ensure only one form is open at a time
+    };
+
+    const updateDailyLimit = async () => {
       try {
-        await axios.put(`http://localhost:8080/employees/update-daily-limit`, {
+        await axios.put("http://localhost:8080/employees/customer-accounts", {
           accountId: accountIdToUpdate.value,
-          DailyLimit: newDailyLimit.value,
+          dailyLimit: newDailyLimit.value,
         });
         alert("Daily limit updated successfully.");
         showDailyLimitForm.value = false;
+        fetchCustomers(); // Refresh the customer data
       } catch (error) {
         alert("Failed to update daily limit: " + error.response.data);
       }
-    }
+    };
+
+    const updateAbsoluteLimit = async () => {
+      try {
+        await axios.put("http://localhost:8080/employees/customer-accounts", {
+          accountId: accountIdToUpdate.value,
+          absoluteLimit: newAbsoluteLimit.value,
+        });
+        alert("Absolute limit updated successfully.");
+        showAbsoluteLimitForm.value = false;
+        fetchCustomers(); // Refresh the customer data
+      } catch (error) {
+        alert("Failed to update absolute limit: " + error.response.data);
+      }
+    };
+
+    const goToCustomers = () => {
+      router.push({ path: "/employees/customer-accounts" });
+    };
+
+    const goToTransactions = () => {
+      router.push({ path: "/transactions" });
+    };
+
+    const goCustomersWithoutAccounts = () => {
+      router.push({ path: "/employees/customers-without-accounts" });
+    };
+
+    const goTransfer = () => {
+      router.push({ path: "/transfer" });
+    };
 
     return {
       customers,
       selectedCustomerIndex,
       viewCustomerDetails,
       openDailyLimitForm,
+      openAbsoluteLimitForm,
       showDailyLimitForm,
+      showAbsoluteLimitForm,
       updateDailyLimit,
+      updateAbsoluteLimit,
       newDailyLimit,
+      newAbsoluteLimit,
+      fetchCustomers,
+      goToCustomers,
+      goToTransactions,
+      goCustomersWithoutAccounts,
+      goTransfer
     };
   },
 };
 </script>
-
 
 <style scoped>
 #app {
@@ -183,8 +230,7 @@ table {
   margin: 50px 20px;
 }
 
-th,
-td {
+th, td {
   border: 1px solid black;
   padding: 8px;
   text-align: left;
@@ -192,5 +238,11 @@ td {
 
 thead {
   background-color: #f2f2f2;
+}
+
+.btn {
+  border: 1px solid black;
+  background-color: #f2f2f2;
+  margin: 5px 5px;
 }
 </style>

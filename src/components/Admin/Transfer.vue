@@ -97,15 +97,40 @@ export default {
           }
         )
         .then((response) => {
-          alert(`Transfer successful: ${response.data}`);
+          alert(`Transfer successful: `
+          // ${response.data}
+          );
         })
         .catch((error) => {
           console.error("There was an error with the transfer:", error);
-          alert(
-            `Error: ${
-              error.response ? error.response.data.message : error.message
-            }`
-          );
+          let errorMessage = "An unexpected error occurred. Please try again.";
+          if (error.response) {
+            switch (error.response.status) {
+              case 400: // Assuming 400 Bad Request for business rule violations
+                errorMessage = error.response.data.message;
+                break;
+              case 401:
+                errorMessage = "Authentication failed. Please log in again.";
+                break;
+              case 404:
+                errorMessage = "Account information could not be found.";
+                break;
+              case 500:
+                errorMessage = "Server error occurred. Please contact support.";
+                break;
+              default:
+                errorMessage =
+                  "Unexpected error occurred: " +
+                  (error.response.data.message 
+                  ||
+                    "No additional information available."
+                  );
+            }
+          } else {
+            errorMessage =
+              "Unable to connect to the server. Please check your network connection.";
+          }
+          alert(`Error: ${errorMessage}`);
         });
     },
   },
