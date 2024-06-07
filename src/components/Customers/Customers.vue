@@ -7,6 +7,7 @@
         <tr>
           <th>Name</th>
           <th>Account Number</th>
+          <th>Account Type</th>
           <th>Action</th>
         </tr>
         </thead>
@@ -14,8 +15,7 @@
         <tr v-for="(customer, index) in customers" :key="index">
           <td>{{ customer.customerName }}</td>
           <td>{{ customer.IBAN }}</td>
-          <td>{{ customer.IBAN }}</td>
-          <td>{{ customer.IBAN }}</td>
+          <td>{{ customer.accountType }}</td>
           <td>
             <button @click="viewCustomerDetails(index)">
               Transactions
