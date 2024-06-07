@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2 class="mb-4">Welcome, {{ user.firstName }} {{ user.lastName }}</h2>
+        <h2 class="mb-4">Welcome, {{ store.user.firstName }} {{ store.user.lastName }}</h2>
         <hr>
         <h3>Your Accounts</h3>
         <div class="row">
@@ -22,9 +22,16 @@
 
 <script>
 import axios from 'axios';
+import {mapGetters} from "vuex";
+import store from "../../stores/User";
 
 export default {
     name: "CustomerHome",
+  computed: {
+    store() {
+      return store
+    }
+  },
     data() {
         return {
             user: {},
@@ -45,7 +52,7 @@ export default {
     },
     mounted() {
         this.fetchCustomerDetails();
-    }
+    },
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
     <div class="container mt-3">
         <h2>Accounts</h2>
-        <div v-for="account in store.accounts" :key="account.id" class="card mb-3">
+        <div v-for="account in store.accounts" :key="account.customerId" class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">{{ account.accountType }} - {{ account.IBAN }}</h5>
                 <p class="card-text">Balance: {{ account.balance }}</p>

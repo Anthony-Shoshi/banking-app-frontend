@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import store from "@/stores/User";
 
 export const useStore = defineStore('customer', {
     state: () => ({
@@ -67,4 +68,5 @@ export const useStore = defineStore('customer', {
             this.isLoggedIn = false;
         },
     },
+
 });

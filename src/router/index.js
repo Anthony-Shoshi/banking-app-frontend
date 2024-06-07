@@ -61,8 +61,8 @@ const routes = [
             {path: "/fund-transfer-own", component: FundTransferOwn, meta: {role: "ROLE_CUSTOMER"},},
         ],
     },
-    {path: "/atm/login", component: ATMLogin, meta: {role: "ROLE_CUSTOMER"},},
-    {path: "/atm", component: ATMInterface, meta: {role: "ROLE_CUSTOMER"},},
+    {path: "/atm/login", component: ATMLogin,},
+    {path: "/atm", component: ATMInterface,},
 ];
 
 const router = createRouter({
