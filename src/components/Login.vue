@@ -66,9 +66,9 @@ export default {
 
         if (loginResult.success) {
           const user = this.$store.state.user;
-          if (user.role === 'EMPLOYEE') {
+          if (user.role === 'ROLE_EMPLOYEE') {
             this.$router.push('/employeeView');
-          } else if (user.role === 'CUSTOMER') {
+          } else if (user.role === 'ROLE_CUSTOMER') {
             this.$router.push('/customerDashboard');
           } else {
             this.$router.push('/');

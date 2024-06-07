@@ -14,12 +14,12 @@ const routes = [
     { path: '/', component: Home },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
-    { path: '/customerDashboard', component: CustomerDashboard, meta: { role: 'CUSTOMER' } },
-    { path: '/employeeView', component: EmployeeView, meta: { role: 'EMPLOYEE' } },
-    { path: '/employees/customer-accounts', component: Customers, meta: { role: 'EMPLOYEE' } },
-    { path: '/employees/customers-without-accounts', component: CustomersWithoutAccounts, meta: { role: 'EMPLOYEE' } },
-    { path: '/customers/:customerId/transactions', component: CustomerTransaction, meta: { role: 'CUSTOMER' } },
-    { path: '/transactions', component: ViewTransactionsList, meta: { role: 'EMPLOYEE' } },
+    { path: '/customerDashboard', component: CustomerDashboard, meta: { role: 'ROLE_CUSTOMER' } },
+    { path: '/employeeView', component: EmployeeView, meta: { role: 'ROLE_EMPLOYEE' } },
+    { path: '/employees/customer-accounts', component: Customers, meta: { role: 'ROLE_EMPLOYEE' } },
+    { path: '/employees/customers-without-accounts', component: CustomersWithoutAccounts, meta: { role: 'ROLE_EMPLOYEE' } },
+    { path: '/customers/:customerId/transactions', component: CustomerTransaction, meta: { role: 'ROLE_CUSTOMER' } },
+    { path: '/transactions', component: ViewTransactionsList, meta: { role: 'ROLE_EMPLOYEE' } },
 ];
 
 const router = createRouter({

@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import axios from '.././axios';
+import api from '../axios';
 
 const store = createStore({
     state() {
@@ -10,8 +10,8 @@ const store = createStore({
     },
     getters: {
         isAuthenticated: (state) => !!state.user,
-        isEmployee: (state) => state.user?.role === 'EMPLOYEE',
-        isCustomer: (state) => state.user?.role === 'CUSTOMER',
+        isEmployee: (state) => state.user?.role === 'ROLE_EMPLOYEE',
+        isCustomer: (state) => state.user?.role === 'ROLE_CUSTOMER',
         user: (state) => state.user,
         userName: (state) => `${state.user?.firstName} ${state.user?.lastName}`,
     },
@@ -23,14 +23,14 @@ const store = createStore({
         setToken(state, token) {
             state.token = token;
             localStorage.setItem('token', token);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         },
         logout(state) {
             state.user = null;
             state.token = null;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-            delete axios.defaults.headers.common['Authorization'];
+            delete api.defaults.headers.common['Authorization'];
         },
         initializeStore(state) {
             const user = localStorage.getItem('user');
@@ -40,7 +40,7 @@ const store = createStore({
             }
             if (token) {
                 state.token = token;
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             }
         },
     },
