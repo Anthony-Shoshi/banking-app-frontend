@@ -1,20 +1,29 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 
-import App from './App.vue'
-import router from './router'
-import store from './stores/User';
+import App from './App.vue';
+import router from './router';
+import './assets/main.css';
+
+// Import Pinia store
+import { useUserStore } from '@/stores/User';
+
+const app = createApp(App);
+const pinia = createPinia();
+
+app.use(pinia);
+app.use(router);
 
 
-import './assets/main.css'
+// const userStore = useUserStore();
+// userStore.initializeStore();
 
-const app = createApp(App)
 
+app.mount('#app');
 
-app.use(store);
-app.use(createPinia())
-app.use(router)
+// Initialize the store after the app has been mounted
+// Set up Axios interceptor
 
-app.mount('#app')

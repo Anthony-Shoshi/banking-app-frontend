@@ -23,7 +23,7 @@
                 <div v-if="showPasswordError" class="text-danger">Password is required</div>
               </div>
               <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
-              <a href="/register" class="btn btn-link btn-lg btn-block">Don't have an account? Register!</a>
+              <router-link to="/register" class="btn btn-link btn-lg btn-block">Don't have an account? Register!</router-link>
               <div v-if="loginError" class="text-danger mt-3">{{ loginError }}</div>
             </form>
           </div>
@@ -35,6 +35,7 @@
 
 <script>
 import axios from 'axios';
+import { useUserStore } from '@/stores/User';
 
 export default {
   name: 'Login',
@@ -63,14 +64,16 @@ export default {
           })
           .then((response) => {
             const { token } = response.data;
-            this.$store.dispatch('login', { token })
+            const userStore = useUserStore();
+
+            userStore.login({ token })
                 .then(({ success, user }) => {
                   if (success) {
-                    if (user.approved) {
-                      this.redirectUser(user.role);
-                    } else {
-                      this.$router.push('/pending-approval');
-                    }
+                      if (user.approved) {
+                        this.redirectUser(user.role);
+                      } else {
+                        this.$router.push('/pending-approval');
+                      }
                   } else {
                     this.loginError = "Login failed. Please check your credentials and try again.";
                   }

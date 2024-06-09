@@ -22,14 +22,13 @@
 
 <script>
 import axios from 'axios';
-import {mapGetters} from "vuex";
-import store from "../../stores/User";
+import { useUserStore } from '@/stores/User';
 
 export default {
     name: "CustomerHome",
   computed: {
     store() {
-      return store
+      return useUserStore
     }
   },
     data() {

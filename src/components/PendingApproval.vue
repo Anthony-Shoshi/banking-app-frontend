@@ -9,12 +9,12 @@
 
 <script>
 
-import {useStore} from "vuex";
+import { useUserStore } from '@/stores/User';
 
 export default {
   name: 'PendingApproval',
   setup() {
-    const store = useStore(); // Use the user store
+    const store = useUserStore(); // Use the user store
 
     const logoutHandler = () => {
       store.commit('logout'); // Call the logout method from the user store

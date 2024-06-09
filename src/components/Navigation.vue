@@ -13,16 +13,16 @@
         </li>
         <li v-if="!isAuthenticated && !isAtmLogin" class="nav-item">
           <router-link to="/login" class="nav-link" active-class="active"
-            @click.native="handleRegularLoginClick">Login</router-link>
+                       @click.native="handleRegularLoginClick">Login</router-link>
         </li>
-        <li v-if="!store.isLoggedIn && !isAuthenticated" class="nav-item">
+        <li v-if="!userStore.isLoggedIn && !isAuthenticated" class="nav-item">
           <router-link to="/atm/login" class="nav-link" active-class="active">ATM Login</router-link>
         </li>
       </ul>
       <div class="d-flex">
-        <span v-if="store.isLoggedIn" class="navbar-text text-white me-3">Hello, {{ store.user.firstName }} {{
-          store.user.lastName }}</span>
-        <button v-if="store.isLoggedIn" @click="AtmLogout" class="btn btn-outline-light">Logout</button>
+        <span v-if="userStore.isLoggedIn" class="navbar-text text-white me-3">Hello, {{ userStore.user.firstName }} {{
+            userStore.user.lastName }}</span>
+        <button v-if="userStore.isLoggedIn" @click="AtmLogout" class="btn btn-outline-light">Logout</button>
       </div>
       <div class="d-flex">
         <span v-if="isAuthenticated" class="navbar-text text-white me-3">Hello, {{ userName }}</span>
@@ -34,14 +34,13 @@
 
 <script>
 import { ref, watch } from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
-import { useStore } from '@/stores/customer';
 import { useRoute, useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/User';
 
 export default {
   name: 'Navigation',
   setup() {
-    const store = useStore();
+    const userStore = useUserStore();
     const route = useRoute();
     const router = useRouter();
     const hideNavBar = ref(false);
@@ -51,30 +50,39 @@ export default {
         () => route.path,
         (newPath) => {
           hideNavBar.value = newPath === '/pending-approval';
-         // isAtmLogin.value = newPath.startsWith('/atm');
         },
         { immediate: true }
     );
 
     const AtmLogout = () => {
-      store.logout();
+      userStore.logout();
       router.push('/');
     };
 
-    return { store, hideNavBar, isAtmLogin, route, router, AtmLogout };
+    return { userStore, hideNavBar, isAtmLogin, route, router, AtmLogout };
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'isEmployee', 'isCustomer', 'userName']),
+    isAuthenticated() {
+      return this.userStore.isAuthenticated;
+    },
+    isEmployee() {
+      return this.userStore.isEmployee;
+    },
+    isCustomer() {
+      return this.userStore.isCustomer;
+    },
+    userName() {
+      return this.userStore.userName;
+    }
   },
   methods: {
-    ...mapMutations(['logout']),
     logoutHandler() {
-      this.logout();
+      this.userStore.logout();
       this.$router.push('/');
     },
     handleRegularLoginClick() {
-      if (this.store.isLoggedIn) {
-        this.store.logout();
+      if (this.userStore.isLoggedIn) {
+        this.userStore.logout();
       }
       this.$router.push('/login');
     }
