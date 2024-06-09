@@ -44,6 +44,7 @@ export const useUserStore = defineStore('user', {
             localStorage.setItem('token', token);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         },
+
         logout() {
             this.user = null;
             this.token = null;
@@ -51,25 +52,19 @@ export const useUserStore = defineStore('user', {
             localStorage.removeItem('token');
             delete axios.defaults.headers.common['Authorization'];
         },
-        initializeStore() {
-            const user = localStorage.getItem('user');
-            const token = localStorage.getItem('token');
-            if (user) {
-                this.user = JSON.parse(user);
-            }
-            if (token) {
-                this.token = token;
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            }
-        },
-        async login({ token }) {
+
+        async login({ username, password }) {
             try {
+                const response = await axios.post('http://localhost:8080/login', {
+                    email: username,
+                    password: password,
+                });
+                const { token } = response.data;
                 const decoded = decodeToken(token);
                 if (!decoded) {
                     throw new Error("Failed to decode token.");
                 }
                 const user = {
-                   // token: token,
                     id: decoded.sub,
                     role: decoded.auth,
                     firstName: decoded.firstName,

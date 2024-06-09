@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { useUserStore } from '@/stores/User';
 
 export default {
@@ -49,48 +48,27 @@ export default {
     };
   },
   methods: {
-    validateLogin() {
+    async validateLogin() {
       this.showUsernameError = this.username === '';
       this.showPasswordError = this.password === '';
       if (!this.showUsernameError && !this.showPasswordError) {
-        this.fetchLogin();
-      }
-    },
-    fetchLogin() {
-      axios
-          .post('http://localhost:8080/login', {
-            email: this.username,
-            password: this.password,
-          })
-          .then((response) => {
-            const { token } = response.data;
-            const userStore = useUserStore();
-
-            userStore.login({ token })
-                .then(({ success, user }) => {
-                  if (success) {
-                      if (user.approved) {
-                        this.redirectUser(user.role);
-                      } else {
-                        this.$router.push('/pending-approval');
-                      }
-                  } else {
-                    this.loginError = "Login failed. Please check your credentials and try again.";
-                  }
-                })
-                .catch((error) => {
-                  this.loginError = "Failed to process login. Please try again.";
-                  console.error("Login Error:", error);
-                });
-          })
-          .catch((error) => {
-            console.error('There was a problem with the Axios request:', error);
-            if (error.response && error.response.status === 401) {
-              this.loginError = error.response.data;
+        try {
+          const userStore = useUserStore();
+          const { success, user } = await userStore.login({ username: this.username, password: this.password });
+          if (success) {
+            if (user.approved) {
+              this.redirectUser(user.role);
             } else {
-              this.loginError = 'Login failed. Please check your credentials and try again.';
+              this.$router.push('/pending-approval');
             }
-          });
+          } else {
+            this.loginError = "Login failed. Please check your credentials and try again.";
+          }
+        } catch (error) {
+          console.error("Login Error:", error);
+          this.loginError = "Failed to process login. Please try again.";
+        }
+      }
     },
     redirectUser(role) {
       if (role === 'ROLE_EMPLOYEE') {
