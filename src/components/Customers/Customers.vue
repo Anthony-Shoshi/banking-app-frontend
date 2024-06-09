@@ -18,6 +18,7 @@
             <tr>
               <th>Name</th>
               <th>Account Number</th>
+              <th>Account Type</th>
               <th>Daily Limit</th>
               <th>Absolute Limit</th>
               <th>Actions</th>
@@ -27,12 +28,14 @@
             <tr v-for="(customer, index) in customers" :key="index">
               <td>{{ customer.customerName }}</td>
               <td>{{ customer.IBAN }}</td>
+              <td>{{customer.accountType}}</td>
               <td>{{ customer.dailyLimit }}</td>
               <td>{{ customer.absoluteLimit }}</td>
               <td>
                 <button class="btn" @click="viewCustomerDetails(index)">Transactions</button>
                 <button class="btn" @click.stop="openDailyLimitForm(customer.accountId)">Edit Daily Limit</button>
                 <button class="btn" @click.stop="openAbsoluteLimitForm(customer.accountId)">Edit Absolute Limit</button>
+                <button class="btn" @click.stop="closeAccount(customer.customerId)">Close Account</button>
               </td>
             </tr>
           </tbody>
@@ -146,6 +149,21 @@ export default {
       }
     };
 
+    const closeAccount = async (customerId) => {
+      try {
+        const response = await axios.delete(`http://localhost:8080/employees/close-account/${customerId}`);
+        if (response.status === 200) {
+          alert("Customer account status updated to rejected.");
+          customers.value = customers.value.filter(customer => customer.customerId !== customerId);
+        } else {
+          throw new Error('Failed to close the account with provided customerId.');
+        }
+      } catch (error) {
+        alert("Failed to update account status: " + (error.response ? error.response.data : error.message));
+      }
+    };
+
+
     const goToCustomers = () => {
       router.push({ path: "/employees/customer-accounts" });
     };
@@ -178,7 +196,8 @@ export default {
       goToCustomers,
       goToTransactions,
       goCustomersWithoutAccounts,
-      goTransfer
+      goTransfer,
+      closeAccount,
     };
   },
 };
