@@ -63,7 +63,7 @@ export default {
         async fetchAccounts() {
             const user = JSON.parse(localStorage.getItem('user'));
             try {
-                const response = await axios.get(`http://localhost:8080/accounts/${user.customerID}`);
+                const response = await axios.get(`http://localhost:8080/accounts/${user.customerId}`);
                 this.accounts = response.data;
             } catch (error) {
                 console.error('Error fetching accounts:', error);
