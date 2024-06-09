@@ -8,24 +8,25 @@
 </template>
 
 <script>
-
 import { useUserStore } from '@/stores/User';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'PendingApproval',
   setup() {
-    const store = useUserStore(); // Use the user store
+    const userStore = useUserStore();
+    const router = useRouter();
 
     const logoutHandler = () => {
-      store.commit('logout'); // Call the logout method from the user store
-      // Redirect to home ("/") after logout
-      window.location.href = "/";
+      userStore.logout(); // Call the logout method from the userStore
+      router.push('/'); // Redirect to the home page
     };
 
     return { logoutHandler };
   }
 }
 </script>
+
 
 <style scoped>
 .pending-approval {
