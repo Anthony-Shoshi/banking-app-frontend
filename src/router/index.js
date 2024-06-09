@@ -1,7 +1,8 @@
-import {createRouter, createWebHistory} from "vue-router";
-import store from "../stores/User";
+import { createRouter, createWebHistory } from "vue-router";
+import store from "../stores/User.js";
 import Home from "../components/Home.vue";
 import Login from "../components/Login.vue";
+import PendingApproval from "../components/PendingApproval.vue";
 import Register from "../components/Register.vue";
 import CustomerDashboard from "../components/User/UserDashboard.vue";
 import EmployeeView from "../components/EmployeeView.vue";
@@ -15,54 +16,52 @@ import ATMLogin from "../components/User/ATM/ATMLogin.vue";
 import TransactionHistory from "../components/User/TransactionHistory.vue";
 import FundTransfer from "../components/User/FundTransfer.vue";
 import FundTransferOwn from "../components/User/FundTransferOwn.vue";
+import CustomerHome from "../components/User/CustomerHome.vue";
 
 const routes = [
-    {path: "/", component: Home},
-    {path: "/login", component: Login},
-    {path: "/register", component: Register},
+    { path: "/", component: Home },
+    { path: "/login", component: Login },
+    { path: "/register", component: Register },
+    { path: "/pending-approval", component: PendingApproval },
     {
         path: "/customerDashboard",
         component: CustomerDashboard,
-        meta: {role: "ROLE_CUSTOMER"},
+        meta: { role: "ROLE_CUSTOMER" },
+        children: [
+            { path: "", component: CustomerHome },
+            { path: "/transaction-history", component: TransactionHistory },
+            { path: "/fund-transfer", component: FundTransfer },
+            { path: "/fund-transfer-own", component: FundTransferOwn },
+        ],
     },
     {
         path: "/employeeView",
         component: EmployeeView,
-        meta: {role: "ROLE_EMPLOYEE"},
+        meta: { role: "ROLE_EMPLOYEE" },
     },
     {
         path: "/employees/customer-accounts",
         component: Customers,
-        meta: {role: "ROLE_EMPLOYEE"},
+        meta: { role: "ROLE_EMPLOYEE" },
     },
     {
         path: "/employees/customers-without-accounts",
         component: CustomersWithoutAccounts,
-        meta: {role: "ROLE_EMPLOYEE"},
+        meta: { role: "ROLE_EMPLOYEE" },
     },
     {
         path: "/customers/:customerId/transactions",
         component: CustomerTransaction,
-        meta: {role: "ROLE_CUSTOMER"},
+        meta: { role: "ROLE_CUSTOMER" },
     },
     {
         path: "/transactions",
         component: ViewTransactionsList,
-        meta: {role: "ROLE_EMPLOYEE"},
+        meta: { role: "ROLE_EMPLOYEE" },
     },
-    {path: "/transfer", component: Transfer, meta: {role: "ROLE_EMPLOYEE"}},
-    {
-        path: "/customerDashboard",
-        component: CustomerDashboard,
-        meta: {role: "CUSTOMER"},
-        children: [
-            {path: "/transaction-history", component: TransactionHistory, meta: {role: "ROLE_CUSTOMER"},},
-            {path: "/fund-transfer", component: FundTransfer, meta: {role: "ROLE_CUSTOMER"},},
-            {path: "/fund-transfer-own", component: FundTransferOwn, meta: {role: "ROLE_CUSTOMER"},},
-        ],
-    },
-    {path: "/atm/login", component: ATMLogin,},
-    {path: "/atm", component: ATMInterface,},
+    { path: "/transfer", component: Transfer, meta: { role: "ROLE_EMPLOYEE" } },
+    { path: "/atm/login", component: ATMLogin },
+    { path: "/atm", component: ATMInterface },
 ];
 
 const router = createRouter({
@@ -79,7 +78,6 @@ router.beforeEach((to, from, next) => {
         next("/login");
     }
     if (requiredRole && userRole !== requiredRole) {
-
     } else {
         next();
     }

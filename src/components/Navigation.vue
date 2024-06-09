@@ -20,7 +20,7 @@
       </ul>
       <div class="d-flex">
         <span v-if="store.isLoggedIn" class="navbar-text text-white me-3">Hello, {{ store.user.firstName }} {{
-            store.user.lastName }}</span>
+          store.user.lastName }}</span>
         <button v-if="store.isLoggedIn" @click="AtmLogout" class="btn btn-outline-light">Logout</button>
       </div>
       <div class="d-flex">
@@ -49,8 +49,8 @@ export default {
     watch(
         () => route.path,
         (newPath) => {
-         // hideNavBar.value = newPath === '/atm/login';
-          //isAtmLogin.value = newPath.startsWith('/atm');
+          hideNavBar.value = newPath === '/pending-approval';
+         // isAtmLogin.value = newPath.startsWith('/atm');
         },
         { immediate: true }
     );
