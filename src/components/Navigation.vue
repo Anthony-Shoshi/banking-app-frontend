@@ -12,7 +12,8 @@
           <router-link to="/customerDashboard" class="nav-link" active-class="active">Customer Dashboard</router-link>
         </li>
         <li v-if="!isAuthenticated && !isAtmLogin" class="nav-item">
-          <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
+          <router-link to="/login" class="nav-link" active-class="active"
+            @click.native="handleRegularLoginClick">Login</router-link>
         </li>
         <li v-if="!store.isLoggedIn && !isAuthenticated" class="nav-item">
           <router-link to="/atm/login" class="nav-link" active-class="active">ATM Login</router-link>
@@ -71,6 +72,12 @@ export default {
       this.logout();
       this.$router.push('/');
     },
+    handleRegularLoginClick() {
+      if (this.store.isLoggedIn) {
+        this.store.logout();
+      }
+      this.$router.push('/login');
+    }
   },
 };
 </script>

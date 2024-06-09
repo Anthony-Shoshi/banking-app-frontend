@@ -1,6 +1,32 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import store from "@/stores/User";
+
+function decodeToken(token) {
+    try {
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split("")
+                .map(function (c) {
+                    return (
+                        "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+                    );
+                })
+                .join("")
+        );
+        const decoded = JSON.parse(jsonPayload);
+
+        if (decoded.exp * 1000 < Date.now()) {
+            console.error("Token expired");
+            return null;
+        }
+        return decoded;
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return null;
+    }
+}
 
 export const useStore = defineStore('customer', {
     state: () => ({
@@ -14,11 +40,23 @@ export const useStore = defineStore('customer', {
             try {
                 const response = await axios.post('http://localhost:8080/login', { email, password });
                 this.token = response.data.token;
-                this.user = response.data;
+                const decodedToken = decodeToken(this.token);
+                if (!decodedToken) {
+                    throw new Error('Invalid token');
+                }
+                this.user = {
+                    firstName: decodedToken.firstName,
+                    lastName: decodedToken.lastName,
+                    customerId: decodedToken.customerId,
+                    email: decodedToken.email,
+                    role: decodedToken.auth,
+                };
                 this.isLoggedIn = true;
-                this.getAccounts(this.user.userId);
+                localStorage.setItem('token', this.token);
+                localStorage.setItem('user', JSON.stringify(this.user));
+                this.getAccounts(this.user.customerId);
             } catch (error) {
-                throw new Error(error.response.data || 'Login failed');
+                throw new Error(error.response?.data || 'Login failed');
             }
         },
         async getAccounts(userId) {
@@ -35,7 +73,7 @@ export const useStore = defineStore('customer', {
                     accountId,
                     amount,
                 });
-                this.getAccounts(this.user.userId);
+                this.getAccounts(this.user.customerId);
                 return response.data;
             } catch (error) {
                 if (error.response && error.response.status === 400) {
@@ -51,7 +89,7 @@ export const useStore = defineStore('customer', {
                     accountId,
                     amount,
                 });
-                this.getAccounts(this.user.userId);
+                this.getAccounts(this.user.customerId);
                 return response.data;
             } catch (error) {
                 if (error.response && error.response.status === 400) {
@@ -66,7 +104,8 @@ export const useStore = defineStore('customer', {
             this.user = {};
             this.accounts = [];
             this.isLoggedIn = false;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
         },
     },
-
 });

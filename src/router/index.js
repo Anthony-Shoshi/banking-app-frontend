@@ -17,23 +17,13 @@ import TransactionHistory from "../components/User/TransactionHistory.vue";
 import FundTransfer from "../components/User/FundTransfer.vue";
 import FundTransferOwn from "../components/User/FundTransferOwn.vue";
 import CustomerHome from "../components/User/CustomerHome.vue";
+import CustomerHome from "../components/User/CustomerHome.vue";
 
 const routes = [
     { path: "/", component: Home },
     { path: "/login", component: Login },
     { path: "/register", component: Register },
     { path: "/pending-approval", component: PendingApproval },
-    {
-        path: "/customerDashboard",
-        component: CustomerDashboard,
-        meta: { role: "ROLE_CUSTOMER" },
-        children: [
-            { path: "", component: CustomerHome },
-            { path: "/transaction-history", component: TransactionHistory },
-            { path: "/fund-transfer", component: FundTransfer },
-            { path: "/fund-transfer-own", component: FundTransferOwn },
-        ],
-    },
     {
         path: "/employeeView",
         component: EmployeeView,
@@ -59,9 +49,20 @@ const routes = [
         component: ViewTransactionsList,
         meta: { role: "ROLE_EMPLOYEE" },
     },
-    { path: "/transfer", component: Transfer, meta: { role: "ROLE_EMPLOYEE" } },
-    { path: "/atm/login", component: ATMLogin },
-    { path: "/atm", component: ATMInterface },
+    {path: "/transfer", component: Transfer, meta: {role: "ROLE_EMPLOYEE"}},
+    {
+        path: "/customerDashboard",
+        component: CustomerDashboard,
+        meta: {role: "ROLE_CUSTOMER"},
+        children: [
+            {path: "", component: CustomerHome, meta: {role: "ROLE_CUSTOMER"},},
+            {path: "/transaction-history", component: TransactionHistory, meta: {role: "ROLE_CUSTOMER"},},
+            {path: "/fund-transfer", component: FundTransfer, meta: {role: "ROLE_CUSTOMER"},},
+            {path: "/fund-transfer-own", component: FundTransferOwn, meta: {role: "ROLE_CUSTOMER"},},
+        ],
+    },
+    {path: "/atm/login", component: ATMLogin,},
+    {path: "/atm", component: ATMInterface,},
 ];
 
 const router = createRouter({
