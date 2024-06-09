@@ -18,6 +18,7 @@
             <tr>
               <th>Name</th>
               <th>Account Number</th>
+              <th>Account Type</th>
               <th>Daily Limit</th>
               <th>Absolute Limit</th>
               <th>Actions</th>
@@ -27,12 +28,14 @@
             <tr v-for="(customer, index) in customers" :key="index">
               <td>{{ customer.customerName }}</td>
               <td>{{ customer.IBAN }}</td>
+              <td>{{customer.accountType}}</td>
               <td>{{ customer.dailyLimit }}</td>
               <td>{{ customer.absoluteLimit }}</td>
               <td>
                 <button class="btn" @click="viewCustomerDetails(index)">Transactions</button>
                 <button class="btn" @click.stop="openDailyLimitForm(customer.accountId)">Edit Daily Limit</button>
                 <button class="btn" @click.stop="openAbsoluteLimitForm(customer.accountId)">Edit Absolute Limit</button>
+                <button class="btn" @click.stop="openAbsoluteLimitForm(customer.accountId)">Close Account</button>
               </td>
             </tr>
           </tbody>

@@ -31,7 +31,6 @@
     <button class="backBtn" @click="goBack">Back to Customers</button>
   </div>
 </template>
-  
   <script>
 import axios from "axios";
 import { ref, onMounted } from "vue";
