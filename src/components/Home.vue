@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="container">
-      <h2 class="welcome-text mt-3 mt-lg-4">Welcome to the FAFA bank</h2>
+      <h2 class="welcome-text mt-3 mt-lg-4">Welcome to The FAFA Bank</h2>
 
       <div class="row mt-5  ">
         <div class="col-md-3">

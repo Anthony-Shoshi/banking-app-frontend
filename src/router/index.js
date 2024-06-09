@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import store from '../stores/User.js';
 import Home from '../components/Home.vue';
 import Login from '../components/Login.vue';
+import PendingApproval from "../components/PendingApproval.vue";
 import Register from '../components/Register.vue';
 import CustomerDashboard from '../components/User/UserDashboard.vue';
 import EmployeeView from '../components/EmployeeView.vue';
@@ -21,8 +22,9 @@ const routes = [
   { path: '/', component: Home },
   { path: '/login', component: Login },
   { path: '/register', component: Register },
+  { path: '/pending-approval', component: PendingApproval},
   {
-    path: '/customerDashboard', component: CustomerDashboard, meta: { role: 'CUSTOMER' },
+    path: '/customerDashboard', component: CustomerDashboard, meta: { role: 'ROLE_CUSTOMER' },
     children: [
       { path: '', component: CustomerHome },
       { path: '/transaction-history', component: TransactionHistory },
@@ -30,12 +32,12 @@ const routes = [
       { path: '/fund-transfer-own', component: FundTransferOwn }
     ]
   },
-  { path: '/employeeView', component: EmployeeView, meta: { role: 'EMPLOYEE' } },
-  { path: '/employees/customer-accounts', component: Customers, meta: { role: 'EMPLOYEE' } },
-  { path: '/employees/customers-without-accounts', component: CustomersWithoutAccounts, meta: { role: 'EMPLOYEE' } },
-  { path: '/customers/:customerId/transactions', component: CustomerTransaction, meta: { role: 'CUSTOMER' } },
-  { path: '/transactions', component: ViewTransactionsList, meta: { role: 'EMPLOYEE' } },
-  { path: '/transfer', component: Transfer, meta: { role: 'EMPLOYEE' } },
+  { path: '/employeeView', component: EmployeeView, meta: { role: 'ROLE_EMPLOYEE' } },
+  { path: '/employees/customer-accounts', component: Customers, meta: { role: 'ROLE_EMPLOYEE' } },
+  { path: '/employees/customers-without-accounts', component: CustomersWithoutAccounts, meta: { role: 'ROLE_EMPLOYEE' } },
+  { path: '/customers/:customerId/transactions', component: CustomerTransaction, meta: { role: 'ROLE_CUSTOMER' } },
+  { path: '/transactions', component: ViewTransactionsList, meta: { role: 'ROLE_EMPLOYEE' } },
+  { path: '/transfer', component: Transfer, meta: { role: 'ROLE_EMPLOYEE' } },
   { path: '/atm/login', component: ATMLogin },
   { path: '/atm', component: ATMInterface }
 ];
@@ -46,18 +48,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const requiredRole = to.meta.role;
+  const isAuthenticated = store.getters.isAuthenticated;
+  const userRole = store.getters.user?.role;
 
-  if (to.path === '/atm/login') {
-    if (store.getters.isAuthenticated) {
-      store.commit('logout');
-    }
-    next();
-  } else if (requiresAuth && !store.getters.isAuthenticated) {
-    next('/login');
-  } else if (requiresAuth && requiredRole && !store.getters[requiredRole.toLowerCase()]) {
-    next('/');
+  if (requiredRole && !isAuthenticated) {
+    next("/login");
+  }
+  if (requiredRole && userRole !== requiredRole) {
+
   } else {
     next();
   }

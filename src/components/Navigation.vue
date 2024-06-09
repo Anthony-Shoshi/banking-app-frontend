@@ -47,31 +47,30 @@ export default {
     const isAtmLogin = ref(false);
 
     watch(
-      () => route.path,
-      (newPath) => {
-        hideNavBar.value = newPath === '/atm/login';
-        isAtmLogin.value = newPath.startsWith('/atm');
-      },
-      { immediate: true }
+        () => route.path,
+        (newPath) => {
+          hideNavBar.value = newPath === '/pending-approval';
+         // isAtmLogin.value = newPath.startsWith('/atm');
+        },
+        { immediate: true }
     );
-
-    const logoutHandler = () => {
-      store.logout();
-      router.push('/');
-    };
 
     const AtmLogout = () => {
       store.logout();
       router.push('/');
     };
 
-    return { store, hideNavBar, isAtmLogin, route, router, logoutHandler, AtmLogout };
+    return { store, hideNavBar, isAtmLogin, route, router, AtmLogout };
   },
   computed: {
     ...mapGetters(['isAuthenticated', 'isEmployee', 'isCustomer', 'userName']),
   },
   methods: {
     ...mapMutations(['logout']),
+    logoutHandler() {
+      this.logout();
+      this.$router.push('/');
+    },
   },
 };
 </script>

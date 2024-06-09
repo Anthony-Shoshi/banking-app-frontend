@@ -14,15 +14,15 @@
             <form @submit.prevent="validateLogin">
               <div class="mb-3">
                 <label for="inputUsername" class="form-label">Username</label>
-                <input v-model="username" id="inputUsername" type="text" class="form-control" required/>
+                <input v-model="username" id="inputUsername" type="text" class="form-control" required />
                 <div v-if="showUsernameError" class="text-danger">Username is required</div>
               </div>
               <div class="mb-3">
                 <label for="inputPassword" class="form-label">Password</label>
-                <input v-model="password" type="password" class="form-control" id="inputPassword" required/>
+                <input v-model="password" type="password" class="form-control" id="inputPassword" required />
                 <div v-if="showPasswordError" class="text-danger">Password is required</div>
               </div>
-              <button type='submit' class="btn btn-primary btn-lg btn-block">Login</button>
+              <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
               <a href="/register" class="btn btn-link btn-lg btn-block">Don't have an account? Register!</a>
               <div v-if="loginError" class="text-danger mt-3">{{ loginError }}</div>
             </form>
@@ -34,61 +34,69 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     return {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
       showUsernameError: false,
       showPasswordError: false,
-      loginError: null
+      loginError: null,
     };
   },
   methods: {
     validateLogin() {
-      this.showUsernameError = this.username === "";
-      this.showPasswordError = this.password === "";
+      this.showUsernameError = this.username === '';
+      this.showPasswordError = this.password === '';
       if (!this.showUsernameError && !this.showPasswordError) {
         this.fetchLogin();
       }
     },
     fetchLogin() {
       axios
-          .post("http://localhost:8080/login", {
+          .post('http://localhost:8080/login', {
             email: this.username,
             password: this.password,
-            firstName: this.firstName,
-            lastName: this.lastName,
           })
           .then((response) => {
-            const { token, role, firstName, lastName, customerId } = response.data;
-            localStorage.setItem("token", token);
-            localStorage.setItem("role", role);
-
-            this.$store.dispatch('login', { email: this.username, role: role, firstName: firstName, lastName: lastName, customerId: customerId });
-
-            this.redirectUser(role);
+            const { token } = response.data;
+            this.$store.dispatch('login', { token })
+                .then(({ success, user }) => {
+                  if (success) {
+                    if (user.approved) {
+                      this.redirectUser(user.role);
+                    } else {
+                      this.$router.push('/pending-approval');
+                    }
+                  } else {
+                    this.loginError = "Login failed. Please check your credentials and try again.";
+                  }
+                })
+                .catch((error) => {
+                  this.loginError = "Failed to process login. Please try again.";
+                  console.error("Login Error:", error);
+                });
           })
           .catch((error) => {
-            console.error("There was a problem with the Axios request:", error);
+            console.error('There was a problem with the Axios request:', error);
             if (error.response && error.response.status === 401) {
               this.loginError = error.response.data;
             } else {
-              this.loginError = "Login failed. Please check your credentials and try again."; // Default error message
+              this.loginError = 'Login failed. Please check your credentials and try again.';
             }
           });
     },
-      redirectUser(role) {
-      if (role === "EMPLOYEE") {
-        this.$router.push("/employeeView");
-      } else if (role === "CUSTOMER") {
-        this.$router.push("/customerDashboard");
+    redirectUser(role) {
+      if (role === 'ROLE_EMPLOYEE') {
+        this.$router.push('/employeeView');
+      } else if (role === 'ROLE_CUSTOMER') {
+        this.$router.push('/customerDashboard');
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
