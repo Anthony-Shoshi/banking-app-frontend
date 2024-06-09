@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2 class="mb-4">Welcome, {{ store.user.firstName }} {{ store.user.lastName }}</h2>
+        <h2 class="mb-4">Welcome, {{ user.firstName }} {{ user.lastName }}</h2>
         <hr>
         <h3>Your Accounts</h3>
         <div class="row">
@@ -42,7 +42,7 @@ export default {
         async fetchCustomerDetails() {
             const user = JSON.parse(localStorage.getItem('user'));
             try {
-                const response = await axios.get(`http://localhost:8080/accounts/${user.customerId}`);
+                const response = await axios.get(`http://localhost:8080/accounts/${user.customerID}`);
                 this.accounts = response.data;
                 this.user = user;
             } catch (error) {

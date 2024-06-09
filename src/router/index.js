@@ -15,16 +15,12 @@ import ATMLogin from "../components/User/ATM/ATMLogin.vue";
 import TransactionHistory from "../components/User/TransactionHistory.vue";
 import FundTransfer from "../components/User/FundTransfer.vue";
 import FundTransferOwn from "../components/User/FundTransferOwn.vue";
+import CustomerHome from "../components/User/CustomerHome.vue";
 
 const routes = [
     {path: "/", component: Home},
     {path: "/login", component: Login},
     {path: "/register", component: Register},
-    {
-        path: "/customerDashboard",
-        component: CustomerDashboard,
-        meta: {role: "ROLE_CUSTOMER"},
-    },
     {
         path: "/employeeView",
         component: EmployeeView,
@@ -54,8 +50,9 @@ const routes = [
     {
         path: "/customerDashboard",
         component: CustomerDashboard,
-        meta: {role: "CUSTOMER"},
+        meta: {role: "ROLE_CUSTOMER"},
         children: [
+            {path: "", component: CustomerHome, meta: {role: "ROLE_CUSTOMER"},},
             {path: "/transaction-history", component: TransactionHistory, meta: {role: "ROLE_CUSTOMER"},},
             {path: "/fund-transfer", component: FundTransfer, meta: {role: "ROLE_CUSTOMER"},},
             {path: "/fund-transfer-own", component: FundTransferOwn, meta: {role: "ROLE_CUSTOMER"},},

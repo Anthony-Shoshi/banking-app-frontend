@@ -12,7 +12,8 @@
           <router-link to="/customerDashboard" class="nav-link" active-class="active">Customer Dashboard</router-link>
         </li>
         <li v-if="!isAuthenticated && !isAtmLogin" class="nav-item">
-          <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
+          <router-link to="/login" class="nav-link" active-class="active"
+            @click.native="handleRegularLoginClick">Login</router-link>
         </li>
         <li v-if="!store.isLoggedIn && !isAuthenticated" class="nav-item">
           <router-link to="/atm/login" class="nav-link" active-class="active">ATM Login</router-link>
@@ -20,7 +21,7 @@
       </ul>
       <div class="d-flex">
         <span v-if="store.isLoggedIn" class="navbar-text text-white me-3">Hello, {{ store.user.firstName }} {{
-            store.user.lastName }}</span>
+          store.user.lastName }}</span>
         <button v-if="store.isLoggedIn" @click="AtmLogout" class="btn btn-outline-light">Logout</button>
       </div>
       <div class="d-flex">
@@ -47,12 +48,12 @@ export default {
     const isAtmLogin = ref(false);
 
     watch(
-        () => route.path,
-        (newPath) => {
-         // hideNavBar.value = newPath === '/atm/login';
-          //isAtmLogin.value = newPath.startsWith('/atm');
-        },
-        { immediate: true }
+      () => route.path,
+      (newPath) => {
+        // hideNavBar.value = newPath === '/atm/login';
+        // isAtmLogin.value = newPath.startsWith('/atm');
+      },
+      { immediate: true }
     );
 
     const AtmLogout = () => {
@@ -71,6 +72,12 @@ export default {
       this.logout();
       this.$router.push('/');
     },
+    handleRegularLoginClick() {
+      if (this.store.isLoggedIn) {
+        this.store.logout();
+      }
+      this.$router.push('/login');
+    }
   },
 };
 </script>
