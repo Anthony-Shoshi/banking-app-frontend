@@ -63,7 +63,7 @@ export default {
         async fetchAccounts() {
             const user = JSON.parse(localStorage.getItem('user'));
             try {
-                const response = await axios.get(`http://localhost:8080/accounts/${user.customerId}`);
+                const response = await axios.get(`https://fafabank-app.onrender.com/accounts/${user.customerId}`);
                 this.accounts = response.data;
             } catch (error) {
                 console.error('Error fetching accounts:', error);
@@ -72,7 +72,7 @@ export default {
         async transferFunds() {
             const token = localStorage.getItem("token");
             try {
-                const response = await axios.post('http://localhost:8080/transactions', this.transfer, {
+                const response = await axios.post('https://fafabank-app.onrender.com/transactions', this.transfer, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

@@ -94,7 +94,7 @@ export default {
 
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/employees/customer-accounts");
+        const response = await axios.get("https://fafabank-app.onrender.com/employees/customer-accounts");
         if (response.data && response.data.length) {
           customers.value = response.data;
         } else {
@@ -123,7 +123,7 @@ export default {
 
     const updateDailyLimit = async () => {
       try {
-        await axios.put("http://localhost:8080/employees/customer-accounts", {
+        await axios.put("https://fafabank-app.onrender.com/employees/customer-accounts", {
           accountId: accountIdToUpdate.value,
           dailyLimit: newDailyLimit.value,
         });
@@ -137,7 +137,7 @@ export default {
 
     const updateAbsoluteLimit = async () => {
       try {
-        await axios.put("http://localhost:8080/employees/customer-accounts", {
+        await axios.put("https://fafabank-app.onrender.com/employees/customer-accounts", {
           accountId: accountIdToUpdate.value,
           absoluteLimit: newAbsoluteLimit.value,
         });
@@ -151,7 +151,7 @@ export default {
 
     const closeAccount = async (customerId) => {
       try {
-        const response = await axios.delete(`http://localhost:8080/employees/close-account/${customerId}`);
+        const response = await axios.delete(`https://fafabank-app.onrender.com/employees/close-account/${customerId}`);
         if (response.status === 200) {
           alert("Customer account status updated to rejected.");
           customers.value = customers.value.filter(customer => customer.customerId !== customerId);

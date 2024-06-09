@@ -55,7 +55,7 @@ export const useUserStore = defineStore('user', {
 
         async login({ username, password }) {
             try {
-                const response = await axios.post('http://localhost:8080/login', {
+                const response = await axios.post('https://fafabank-app.onrender.com/login', {
                     email: username,
                     password: password,
                 });

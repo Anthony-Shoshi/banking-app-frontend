@@ -83,7 +83,7 @@ export default {
 
       axios
         .post(
-          "http://localhost:8080/transactions",
+          "https://fafabank-app.onrender.com/transactions",
           {
             fromAccountIban: this.fromAccountIban,
             toAccountIban: this.toAccountIban,

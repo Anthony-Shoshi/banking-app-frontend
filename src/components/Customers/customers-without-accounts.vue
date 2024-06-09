@@ -140,7 +140,7 @@ export default {
     onMounted(async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/employees/customers-without-accounts"
+          "https://fafabank-app.onrender.com/employees/customers-without-accounts"
         );
         if (response.data && response.data.length) {
           customers.value = response.data.map((customer) => ({
@@ -178,7 +178,7 @@ export default {
       };
       try {
         const response = await axios.put(
-          `http://localhost:8080/employees/customers-without-accounts/${customerId}/approve-signup`,
+          `https://fafabank-app.onrender.com/employees/customers-without-accounts/${customerId}/approve-signup`,
           data
         );
         if (response.status === 200) {

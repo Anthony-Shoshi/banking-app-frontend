@@ -88,7 +88,7 @@ export default {
     methods: {
         async searchIban() {
             try {
-                const response = await axios.get('http://localhost:8080/customers/search-iban', {
+                const response = await axios.get('https://fafabank-app.onrender.com/customers/search-iban', {
                     params: {
                         firstName: this.search.firstName,
                         lastName: this.search.lastName,
@@ -107,7 +107,7 @@ export default {
         async transferFunds() {
             const token = localStorage.getItem("token");
             try {
-                const response = await axios.post('http://localhost:8080/transactions', this.transfer, {
+                const response = await axios.post('https://fafabank-app.onrender.com/transactions', this.transfer, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -132,7 +132,7 @@ export default {
             const user = JSON.parse(localStorage.getItem('user'));
             if (user && user.firstName && user.lastName) {
                 try {
-                    const response = await axios.get('http://localhost:8080/customers/search-iban', {
+                    const response = await axios.get('https://fafabank-app.onrender.com/customers/search-iban', {
                         params: {
                             firstName: user.firstName,
                             lastName: user.lastName,

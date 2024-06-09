@@ -38,7 +38,7 @@ export const useStore = defineStore('customer', {
     actions: {
         async login(email, password) {
             try {
-                const response = await axios.post('http://localhost:8080/login', { email, password });
+                const response = await axios.post('https://fafabank-app.onrender.com/login', { email, password });
                 this.token = response.data.token;
                 const decodedToken = decodeToken(this.token);
                 if (!decodedToken) {
@@ -61,7 +61,7 @@ export const useStore = defineStore('customer', {
         },
         async getAccounts(userId) {
             try {
-                const response = await axios.get('http://localhost:8080/accounts/' + userId);
+                const response = await axios.get('https://fafabank-app.onrender.com/accounts/' + userId);
                 this.accounts = response.data;
             } catch (error) {
                 console.error('Fetching accounts failed:', error);
@@ -69,7 +69,7 @@ export const useStore = defineStore('customer', {
         },
         async deposit(accountId, amount) {
             try {
-                const response = await axios.post('http://localhost:8080/customers/deposit', {
+                const response = await axios.post('https://fafabank-app.onrender.com/customers/deposit', {
                     accountId,
                     amount,
                 });
@@ -85,7 +85,7 @@ export const useStore = defineStore('customer', {
         },
         async withdraw(accountId, amount) {
             try {
-                const response = await axios.post('http://localhost:8080/customers/withdraw', {
+                const response = await axios.post('https://fafabank-app.onrender.com/customers/withdraw', {
                     accountId,
                     amount,
                 });

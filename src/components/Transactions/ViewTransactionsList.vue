@@ -74,7 +74,7 @@ export default {
       //   return;
       // }
       axios
-          .get("http://localhost:8080/transactions")
+          .get("https://fafabank-app.onrender.com/transactions")
           .then((response) => {
             this.transactions = response.data;
           })
