@@ -61,7 +61,7 @@ export default {
         try {
           const userStore = useUserStore();
           const { success, user } = await userStore.login({ username: this.username, password: this.password });
-          await nextTick(() => {
+          nextTick(() => {
             window.location.reload();
           });
           if (success) {
