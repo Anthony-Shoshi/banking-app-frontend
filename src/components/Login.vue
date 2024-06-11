@@ -35,6 +35,8 @@
 
 <script>
 import { useUserStore } from '@/stores/User';
+import { useRouter } from 'vue-router';
+import { nextTick } from 'vue';
 
 export default {
   name: 'Login',
@@ -46,6 +48,10 @@ export default {
       showPasswordError: false,
       loginError: null,
     };
+  },
+  setup() {
+    const router = useRouter();
+    return { router };
   },
   methods: {
     async validateLogin() {
@@ -72,9 +78,17 @@ export default {
     },
     redirectUser(role) {
       if (role === 'ROLE_EMPLOYEE') {
-        this.$router.push('/employeeView');
+        this.$router.push('/employeeView').then(() => {
+          nextTick(() => {
+            window.location.reload();
+          });
+        });
       } else if (role === 'ROLE_CUSTOMER') {
-        this.$router.push('/customerDashboard');
+        this.$router.push('/customerDashboard').then(() => {
+          nextTick(() => {
+            window.location.reload();
+          });
+        });
       }
     },
   },
