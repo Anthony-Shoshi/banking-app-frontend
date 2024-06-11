@@ -30,6 +30,11 @@
             <p><strong>IBAN:</strong> {{ errorMessage }}</p>
         </div>
 
+        <div v-if="errorMessageTransfer">
+            <h3>Something Went Wrong!</h3>
+            <p>{{ errorMessageTransfer }}</p>
+        </div>
+
         <form @submit.prevent="transferFunds" class="row g-3 mt-4">
             <div class="col-md-4">
                 <label for="fromAccountIban" class="form-label">From Account IBAN</label>
@@ -79,6 +84,7 @@ export default {
             },
             transferResult: null,
             errorMessage: '',
+            errorMessageTransfer: '',
         };
     },
     setup() {
@@ -100,7 +106,7 @@ export default {
                 if (error.response && error.response.status === 400) {
                     this.errorMessage = 'No current account found for the given customer name';
                 } else {
-                    console.error('Error searching IBAN:', error);
+                    this.errorMessage = 'Error searching IBAN: ' + error;
                 }
             }
         },
@@ -114,8 +120,14 @@ export default {
                 });
                 this.transferResult = response.data;
                 this.errorMessage = '';
+                this.toAccountIban = '';
+                this.transferAmount = null;
             } catch (error) {
-                console.error('Error transferring funds:', error);
+                if (error.response && error.response.data) {
+                    this.errorMessageTransfer = error.response.data;
+                } else {
+                    this.errorMessageTransfer = error.message;
+                }
             }
         },
         copyIban() {
@@ -140,7 +152,7 @@ export default {
                     });
                     this.transfer.fromAccountIban = response.data.iban;
                 } catch (error) {
-                    console.error('Error fetching user IBAN:', error);
+                    this.errorMessage = 'Error searching IBAN: ' + error;
                 }
             }
         }

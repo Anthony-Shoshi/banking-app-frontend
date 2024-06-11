@@ -2,7 +2,7 @@
   <nav v-if="!hideNavBar" class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="container-fluid">
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
-        <li v-if="!isAuthenticated && !isAtmLogin" class="nav-item">
+        <li v-if="!isAuthenticated && !store.isLoggedIn" class="nav-item">
           <router-link to="/" class="nav-link" active-class="active">Home</router-link>
         </li>
         <li v-if="isEmployee && isAuthenticated" class="nav-item">
@@ -15,14 +15,14 @@
           <router-link to="/login" class="nav-link" active-class="active"
                        @click.native="handleRegularLoginClick">Login</router-link>
         </li>
-        <li v-if="!userStore.isLoggedIn && !isAuthenticated" class="nav-item">
+        <li v-if="!store.isLoggedIn && !isAuthenticated" class="nav-item">
           <router-link to="/atm/login" class="nav-link" active-class="active">ATM Login</router-link>
         </li>
       </ul>
       <div class="d-flex">
-        <span v-if="userStore.isLoggedIn" class="navbar-text text-white me-3">Hello, {{ userStore.user.firstName }} {{
-            userStore.user.lastName }}</span>
-        <button v-if="userStore.isLoggedIn" @click="AtmLogout" class="btn btn-outline-light">Logout</button>
+        <span v-if="store.isLoggedIn" class="navbar-text text-white me-3">Hello, {{ store.user.firstName }} {{
+            store.user.lastName }}</span>
+        <button v-if="store.isLoggedIn" @click="AtmLogout" class="btn btn-outline-light">Logout</button>
       </div>
       <div class="d-flex">
         <span v-if="isAuthenticated" class="navbar-text text-white me-3">Hello, {{ userName }}</span>
@@ -36,11 +36,13 @@
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/User';
+import { useStore } from '@/stores/customer';
 
 export default {
   name: 'Navigation',
   setup() {
     const userStore = useUserStore();
+    const store = useStore();
     const route = useRoute();
     const router = useRouter();
     const hideNavBar = ref(false);
@@ -50,16 +52,17 @@ export default {
         () => route.path,
         (newPath) => {
           hideNavBar.value = newPath === '/pending-approval';
+          isAtmLogin.value = newPath.startsWith('/atm');
         },
         { immediate: true }
     );
 
     const AtmLogout = () => {
-      userStore.logout();
+      store.logout();
       router.push('/');
     };
 
-    return { userStore, hideNavBar, isAtmLogin, route, router, AtmLogout };
+    return { store, userStore, hideNavBar, isAtmLogin, route, router, AtmLogout };
   },
   computed: {
     isAuthenticated() {

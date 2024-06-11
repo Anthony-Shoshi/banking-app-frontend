@@ -16,30 +16,15 @@
         <form @submit.prevent="transferMoney">
           <div class="form-group">
             <label for="fromAccountIban">Source Account:</label>
-            <input
-              type="text"
-              id="sourceAccount"
-              v-model="fromAccountIban"
-              required
-            />
+            <input type="text" id="sourceAccount" v-model="fromAccountIban" required />
           </div>
           <div class="form-group">
             <label for="toAccountIban">Destination Account:</label>
-            <input
-              type="text"
-              id="destinationAccount"
-              v-model="toAccountIban"
-              required
-            />
+            <input type="text" id="destinationAccount" v-model="toAccountIban" required />
           </div>
           <div class="form-group">
             <label for="amount">Amount:</label>
-            <input
-              type="number"
-              id="transferAmount"
-              v-model="transferAmount"
-              required
-            />
+            <input type="number" id="transferAmount" v-model="transferAmount" required />
           </div>
           <button type="submit">Transfer</button>
         </form>
@@ -97,9 +82,10 @@ export default {
           }
         )
         .then((response) => {
-          alert(`Transfer successful: `
-          // ${response.data}
-          );
+          alert("Transfer successful");
+          this.fromAccountIban = "";
+          this.toAccountIban = "";
+          this.transferAmount = 0;
         })
         .catch((error) => {
           console.error("There was an error with the transfer:", error);
@@ -107,7 +93,7 @@ export default {
           if (error.response) {
             switch (error.response.status) {
               case 400: // Assuming 400 Bad Request for business rule violations
-                errorMessage = error.response.data.message;
+                errorMessage = error.response.data;
                 break;
               case 401:
                 errorMessage = "Authentication failed. Please log in again.";
@@ -121,8 +107,8 @@ export default {
               default:
                 errorMessage =
                   "Unexpected error occurred: " +
-                  (error.response.data.message 
-                  ||
+                  (error.response.data.message
+                    ||
                     "No additional information available."
                   );
             }
@@ -130,7 +116,7 @@ export default {
             errorMessage =
               "Unable to connect to the server. Please check your network connection.";
           }
-          alert(`Error: ${errorMessage}`);
+          alert(`${errorMessage}`);
         });
     },
   },
