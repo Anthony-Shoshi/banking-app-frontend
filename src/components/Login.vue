@@ -61,6 +61,9 @@ export default {
         try {
           const userStore = useUserStore();
           const { success, user } = await userStore.login({ username: this.username, password: this.password });
+          await nextTick(() => {
+            window.location.reload();
+          });
           if (success) {
             if (user.approved) {
               this.redirectUser(user.role);
@@ -79,15 +82,9 @@ export default {
     redirectUser(role) {
       if (role === 'ROLE_EMPLOYEE') {
         this.$router.push('/employeeView').then(() => {
-          nextTick(() => {
-            window.location.reload();
-          });
         });
       } else if (role === 'ROLE_CUSTOMER') {
         this.$router.push('/customerDashboard').then(() => {
-          nextTick(() => {
-            window.location.reload();
-          });
         });
       }
     },
