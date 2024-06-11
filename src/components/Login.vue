@@ -11,51 +11,98 @@
         <div class="col-md-6 d-flex align-items-center justify-content-center">
           <div class="login-form d-flex flex-column justify-content-center">
             <h2 class="text-center"><strong>Login</strong></h2>
-            <form>
+            <form @submit.prevent="validateLogin">
               <div class="mb-3">
                 <label for="inputUsername" class="form-label">Username</label>
-                <input v-model="username" id="inputUsername" type="text" class="form-control" />
+                <input v-model="username" id="inputUsername" type="text" class="form-control" required />
+                <div v-if="errors.username" class="text-danger">{{ errors.username }}</div>
               </div>
               <div class="mb-3">
                 <label for="inputPassword" class="form-label">Password</label>
-                <input v-model="password" type="password" class="form-control" id="inputPassword" />
+                <input v-model="password" id="inputPassword" type="password" class="form-control" required />
+                <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
               </div>
-              <button type='button' @click="login" class="btn btn-primary btn-lg btn-block">Login</button>
-              <a href="/register" class="btn btn-link btn-lg btn-block">Register</a>
+              <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
+              <router-link to="/register" class="btn btn-link btn-lg btn-block">Don't have an account? Register!</router-link>
+              <div v-if="errors.other" class="text-danger mt-3">{{ errors.other }}</div>
             </form>
           </div>
         </div>
       </div>
     </div>
-    <div class="euro-sign">€</div>
-    <div class="euro-sign">€</div>
-    <div class="euro-sign">€</div>
-    <div class="euro-sign">€</div>
-    <div class="euro-sign">€</div>
   </section>
 </template>
 
 <script>
+import { useUserStore } from '@/stores/User';
+import { nextTick } from 'vue';
+import { useRouter } from 'vue-router';
+
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     return {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
+      errors: {
+        username: null,
+        password: null,
+        other: null
+      }
     };
   },
+  setup() {
+    const router = useRouter();
+    const userStore = useUserStore();
+    return { router, userStore };
+  },
   methods: {
-    login() {
+    async validateLogin() {
+      this.clearErrors();
+      if (!this.username.trim()) {
+        this.errors.username = 'Username is required';
+      }
+      if (!this.password.trim()) {
+        this.errors.password = 'Password is required';
+      }
+      if (this.errors.username || this.errors.password) {
+        return;  // Stop the login process if there are validation errors
+      }
+      try {
+        const result = await this.userStore.login({ username: this.username, password: this.password });
+        if (result.success) {
+          await this.router.push(this.getRedirectRoute(result.user.role));
+          nextTick(() => {
+            window.location.reload();
+          });
+        } else {
+          this.errors.other = "Login failed. Please check your username and password and try again.";
+        }
+      } catch (error) {
+        console.error("Login Error:", error);
+        this.errors.other = "Network or server error. Please try again later.";
+      }
+    },
+    getRedirectRoute(role) {
+      switch(role) {
+        case 'ROLE_EMPLOYEE': return '/employeeView';
+        case 'ROLE_CUSTOMER': return '/customerDashboard';
+        default: return '/';
+      }
+    },
+    clearErrors() {
+      this.errors = { username: null, password: null, other: null };
     }
   }
 };
 </script>
 
-<style scoped>
 
+<style scoped>
 .welcome-text {
-  color: #F7E3DB;
-  font-size: 70px;
+  color: #60BFC1;
+  font-size: 100px;
+  font-weight: bold;
 }
 
 .login-form {
@@ -65,111 +112,23 @@ export default {
   width: 80%;
   max-width: 400px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  height: 80%;
 }
 
 .rounded {
-  border-radius: 20px;
+  width: 80%;
 }
 
-.euro-sign {
-  position: absolute;
-  font-size: 24px;
-  color: #F7E3DB;
+.btn-primary {
+  background-color: #60BFC1;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  width: 100%;
 }
 
-.euro-sign:nth-child(1) {
-  animation: moveEuro1 5s linear infinite;
-}
-
-.euro-sign:nth-child(2) {
-  animation: moveEuro2 4s linear infinite;
-}
-
-.euro-sign:nth-child(3) {
-  animation: moveEuro3 6s linear infinite;
-}
-
-.euro-sign:nth-child(4) {
-  animation: moveEuro4 3s linear infinite;
-}
-
-.euro-sign:nth-child(5) {
-  animation: moveEuro5 7s linear infinite;
-}
-
-@keyframes moveEuro1 {
-  0% {
-    top: 0;
-    left: 0;
-  }
-  50% {
-    top: 100%;
-    left: 100%;
-  }
-  100% {
-    top: 0;
-    left: 0;
-  }
-}
-
-@keyframes moveEuro2 {
-  0% {
-    top: 100%;
-    left: 100%;
-  }
-  50% {
-    top: 0;
-    left: 0;
-  }
-  100% {
-    top: 100%;
-    left: 100%;
-  }
-}
-
-@keyframes moveEuro3 {
-  0% {
-    top: 50%;
-    left: 50%;
-  }
-  50% {
-    top: 0;
-    left: 100%;
-  }
-  100% {
-    top: 50%;
-    left: 50%;
-  }
-}
-
-@keyframes moveEuro4 {
-  0% {
-    top: 0;
-    left: 100%;
-  }
-  50% {
-    top: 100%;
-    left: 0;
-  }
-  100% {
-    top: 0;
-    left: 100%;
-  }
-}
-
-@keyframes moveEuro5 {
-  0% {
-    top: 100%;
-    left: 0;
-  }
-  50% {
-    top: 0;
-    left: 100%;
-  }
-  100% {
-    top: 100%;
-    left: 0;
-  }
+.btn-primary:hover {
+  background-color: #3a7e80;
+  color: #fff;
+  border: none;
 }
 </style>
