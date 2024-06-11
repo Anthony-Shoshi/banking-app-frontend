@@ -15,16 +15,16 @@
               <div class="mb-3">
                 <label for="inputUsername" class="form-label">Username</label>
                 <input v-model="username" id="inputUsername" type="text" class="form-control" required />
-                <div v-if="showUsernameError" class="text-danger">Username is required</div>
+                <div v-if="errors.username" class="text-danger">{{ errors.username }}</div>
               </div>
               <div class="mb-3">
                 <label for="inputPassword" class="form-label">Password</label>
-                <input v-model="password" type="password" class="form-control" id="inputPassword" required />
-                <div v-if="showPasswordError" class="text-danger">Password is required</div>
+                <input v-model="password" id="inputPassword" type="password" class="form-control" required />
+                <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
               </div>
               <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
               <router-link to="/register" class="btn btn-link btn-lg btn-block">Don't have an account? Register!</router-link>
-              <div v-if="loginError" class="text-danger mt-3">{{ loginError }}</div>
+              <div v-if="errors.other" class="text-danger mt-3">{{ errors.other }}</div>
             </form>
           </div>
         </div>
@@ -35,8 +35,8 @@
 
 <script>
 import { useUserStore } from '@/stores/User';
-import { useRouter } from 'vue-router';
 import { nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'Login',
@@ -44,53 +44,59 @@ export default {
     return {
       username: '',
       password: '',
-      showUsernameError: false,
-      showPasswordError: false,
-      loginError: null,
+      errors: {
+        username: null,
+        password: null,
+        other: null
+      }
     };
   },
   setup() {
     const router = useRouter();
-    return { router };
+    const userStore = useUserStore();
+    return { router, userStore };
   },
   methods: {
     async validateLogin() {
-      this.showUsernameError = this.username === '';
-      this.showPasswordError = this.password === '';
-      if (!this.showUsernameError && !this.showPasswordError) {
-        try {
-          const userStore = useUserStore();
-          const { success, user } = await userStore.login({ username: this.username, password: this.password });
-          await nextTick(() => {
+      this.clearErrors();
+      if (!this.username.trim()) {
+        this.errors.username = 'Username is required';
+      }
+      if (!this.password.trim()) {
+        this.errors.password = 'Password is required';
+      }
+      if (this.errors.username || this.errors.password) {
+        return;  // Stop the login process if there are validation errors
+      }
+      try {
+        const result = await this.userStore.login({ username: this.username, password: this.password });
+        if (result.success) {
+          await this.router.push(this.getRedirectRoute(result.user.role));
+          nextTick(() => {
             window.location.reload();
           });
-          if (success) {
-            if (user.approved) {
-              this.redirectUser(user.role);
-            } else {
-              this.$router.push('/pending-approval');
-            }
-          } else {
-            this.loginError = "Login failed. Please check your credentials and try again.";
-          }
-        } catch (error) {
-          console.error("Login Error:", error);
-          this.loginError = "Failed to process login. Please try again.";
+        } else {
+          this.errors.other = "Login failed. Please check your username and password and try again.";
         }
+      } catch (error) {
+        console.error("Login Error:", error);
+        this.errors.other = "Network or server error. Please try again later.";
       }
     },
-    redirectUser(role) {
-      if (role === 'ROLE_EMPLOYEE') {
-        this.$router.push('/employeeView').then(() => {
-        });
-      } else if (role === 'ROLE_CUSTOMER') {
-        this.$router.push('/customerDashboard').then(() => {
-        });
+    getRedirectRoute(role) {
+      switch(role) {
+        case 'ROLE_EMPLOYEE': return '/employeeView';
+        case 'ROLE_CUSTOMER': return '/customerDashboard';
+        default: return '/';
       }
     },
-  },
+    clearErrors() {
+      this.errors = { username: null, password: null, other: null };
+    }
+  }
 };
 </script>
+
 
 <style scoped>
 .welcome-text {
