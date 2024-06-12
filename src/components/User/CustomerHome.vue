@@ -37,7 +37,7 @@ export default {
       const userStore = useUserStore(); // Access the user store
       const user = userStore.user; // Access the user object from the store
       try {
-        const response = await axios.get(`https://fafabank-app.onrender.com/accounts/${user.customerId}`);
+        const response = await axios.get(`https://fafabank-app-z7hg.onrender.com/accounts/${user.customerId}`);
         this.accounts = response.data;
         this.user = user;
       } catch (error) {

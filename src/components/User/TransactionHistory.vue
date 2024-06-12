@@ -98,7 +98,7 @@ export default {
             };
 
             try {
-                const response = await axios.get('https://fafabank-app.onrender.com/customers/transaction-history', { params });
+                const response = await axios.get('https://fafabank-app-z7hg.onrender.com/customers/transaction-history', { params });
                 console.log('Response:', response.data);
                 this.transactions = response.data;
             } catch (error) {

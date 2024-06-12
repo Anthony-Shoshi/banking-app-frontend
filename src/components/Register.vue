@@ -123,7 +123,7 @@ export default {
   methods: {
     async registerCustomer() {
       try {
-        const response = await axios.post('https://fafabank-app.onrender.com/register', {
+        const response = await axios.post('https://fafabank-app-z7hg.onrender.com/register', {
           email: this.email,
           password: this.password,
           confirmPassword: this.confirmPassword,

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://fafabank-app.onrender.com'
+    baseURL: 'https://fafabank-app-z7hg.onrender.com'
 });
 
 api.interceptors.request.use(function (config) {

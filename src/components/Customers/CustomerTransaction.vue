@@ -52,7 +52,7 @@ export default {
     onMounted(async () => {
       try {
         const response = await axios.get(
-          `https://fafabank-app.onrender.com/customers/${props.customerId}/transactions`
+          `https://fafabank-app-z7hg.onrender.com/customers/${props.customerId}/transactions`
         );
         transactions.value = response.data;
       } catch (error) {

@@ -74,7 +74,7 @@ export default {
       //   return;
       // }
       axios
-          .get("https://fafabank-app.onrender.com/transactions")
+          .get("https://fafabank-app-z7hg.onrender.com/transactions")
           .then((response) => {
             this.transactions = response.data;
           })
